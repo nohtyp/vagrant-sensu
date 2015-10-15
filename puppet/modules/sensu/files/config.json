@@ -1,0 +1,9 @@
+{
+  "rabbitmq": {
+    "host": "192.168.2.101",
+    "port": 5672,
+    "user": "sensu",
+    "password": "foster",
+    "vhost": "/sensu"
+  }
+}

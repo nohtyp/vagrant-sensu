@@ -1,0 +1,71 @@
+#=Class sensu
+class sensu {
+  file { '/etc/yum.repos.d/sensu.repo':
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/sensu/sensu.repo',
+  }
+
+  file { '/etc/sensu/conf.d/client.json':
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => 'puppet:///modules/sensu/client.json',
+    require => Package['sensu'],
+  }
+
+  file { '/etc/sensu/config.json':
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => 'puppet:///modules/sensu/config.json',
+    require => Package['sensu'],
+  }
+
+  file { '/etc/sensu/plugins/system':
+    ensure   => 'directory',
+    owner    => 'root',
+    group    => 'root',
+    mode     => '0755',
+    require  => Package['sensu'],
+  }
+
+  file { '/etc/sensu/plugins/system/check-procs.rb':
+    ensure   => 'file',
+    owner    => 'root',
+    group    => 'root',
+    mode     => '0755',
+    source   => 'puppet:///modules/sensu/check-procs.rb',
+    require  => Package['sensu'],
+  }
+
+  file { '/etc/sensu/plugins/system/cpu-metrics.rb':
+    ensure   => 'file',
+    owner    => 'root',
+    group    => 'root',
+    mode     => '0755',
+    source   => 'puppet:///modules/sensu/cpu-metrics.rb',
+    require  => Package['sensu'],
+  }
+
+  package { 'sensu':
+    ensure  => present,
+    require => File['/etc/yum.repos.d/sensu.repo'],
+  }
+
+  package { 'rubygems':
+    ensure  => present,
+  }
+
+  package { 'sensu-plugin':
+    ensure   => 'installed',
+    provider => 'gem',
+    require  => Package['rubygems'],
+  }
+
+  service { 'sensu-client':
+    ensure  => running,
+    require => [ File['/etc/sensu/conf.d/client.json'],File['/etc/sensu/config.json'] ],
+  }
+}

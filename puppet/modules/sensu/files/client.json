@@ -1,0 +1,7 @@
+{
+  "client": {
+    "name": "peter.familyguy.com",
+    "address": "192.168.2.110",
+    "subscriptions": [ "test"]
+  }
+}
