@@ -1,0 +1,5 @@
+---
+rabbitmq::package_provider: 'yum'
+
+rabbitmq::myvhost: '/sensu'
+rabbitmq::vhostuser: 'sensu'
