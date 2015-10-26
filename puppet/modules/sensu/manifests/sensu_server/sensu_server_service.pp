@@ -6,6 +6,6 @@ class sensu::sensu_server::sensu_server_service inherits sensu {
     hasrestart    => true,
     hasstatus     => true,
     name          => 'sensu-server',
+    subscribe     => Service['Sensu API Service'],
   }
 } 
-

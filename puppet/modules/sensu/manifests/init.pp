@@ -37,19 +37,35 @@
 #
 class sensu (
 
-$sensu_package       =  $sensu::params::sensu_package,
-$sensu_base_url      =  $sensu::params::sensu_base_url,
-$gempackages         =  $sensu::params::gempackages,
+$sensu_package          = $sensu::params::sensu_package,
+$sensu_base_url         = $sensu::params::sensu_base_url,
+$gempackages            = $sensu::params::gempackages,
+$kernel_settings        = $sensu::params::kernel_settings,
+$kernel_sysctl_config   = $sensu::params::kernel_sysctl_config,
+$use_sensu_repo         = $sensu::params::use_sensu_repo,
+
+
 ) inherits sensu::params {
 
-    anchor {'sensu::begin': } ->
-     class {'::sensu::sensu_repo':} ->
-     class {'::sensu::install':} ->
-     class {'::sensu::gems':} ->
-     class {'::sensu::redis::redis_service':} ->
-     class {'::sensu::sensu_server::sensu_api_service':} ->
-     class {'::sensu::sensu_server::sensu_server_service':} ->
-     class {'::sensu::uchiwa::uchiwa_service':}
-    anchor {'sensu::end':}
-
+     if $use_sensu_repo != false {
+      anchor {'sensu::begin': } ->
+       class {'::sensu::sensu_repo':} ->
+       class {'::sensu::install':} ->
+       class {'::sensu::file':} ->
+       class {'::sensu::gems':} ->
+       class {'::sensu::sensu_server::sensu_api_service':} ->
+       class {'::sensu::sensu_server::sensu_server_service':} ->
+       class {'::sensu::uchiwa::uchiwa_service':}
+      anchor {'sensu::end': }
+     }
+     else {
+      anchor {'sensu::begin': } ->
+       class {'::sensu::install':} ->
+       class {'::sensu::file':} ->
+       class {'::sensu::gems':} ->
+       class {'::sensu::sensu_server::sensu_api_service':} ->
+       class {'::sensu::sensu_server::sensu_server_service':} ->
+       class {'::sensu::uchiwa::uchiwa_service':}
+      anchor {'sensu::end':}
+     }
 }
