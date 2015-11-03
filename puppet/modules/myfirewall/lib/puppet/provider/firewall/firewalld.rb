@@ -1,9 +1,5 @@
 # encoding: UTF-8
 
-######
-#Save space for requires
-######
-
 
 Puppet::Type.type(:firewall).provide(:firewalld) do
   @doc = <<-EOS
@@ -13,33 +9,43 @@ Puppet::Type.type(:firewall).provide(:firewalld) do
   EOS
 
   confine :osfamily => :redhat
-  confine :lsbmajdistrelease => 7
 
-  commands :fwdcmd => 'firewall-cmd'
+  commands :firewalld => 'firewall-cmd'
 
 
   def build_parameters
-    params = []
+    params = [] 
 
     if @resource[:zone].nil? && @resource[:port].nil? && @resource[:protocol].nil? || @resource[:zone].nil? && @resource[:service].nil?
       fail('You need to provide a zone,port and protocol or zone and service.')
     end
 
-    params << '--zone='       << @resource[:zone] unless @resource[:zone].nil?
-    params << '--service='    << @resource[:service] unless @resource[:service].nil?
-    params << '--add-source=' << @resource[:source] unless @resource[:source].nil?
-    params << '--permanent'   << @resource[:permanent] unless @resource[:permanent].nil?
-    params << '--port='       << @resource[:port]/@resource[:protocol] unless @resource[:port].nil?
+    params << "--zone=#{@resource[:zone]}" unless @resource[:zone].nil?
+    params << "--add-service=#{@resource[:service]}" unless @resource[:service].nil?
+    params << "--add-source=#{@resource[:source]}" unless @resource[:source].nil?
+    #params << '--permanent'   << @resource[:permanent] unless @resource[:permanent].nil?
+    params << "--port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
 
-    params.each do |values|
-      Puppet.debug("#{values}")
+    params.each do |key|
+      Puppet.debug("#{key}")
     end
     params
   end
 
+  def checkservices
+    fwlist = firewalld('--list-services', "--zone=#{@resource[:zone]}")
+    if "#{fwlist}".include?"#{@resource[:service]}"
+      Puppet.debug("Service is created in firewall.")
+      return true
+    else
+      Puppet.debug("Service is not here..")
+      return false
+    end
+  end
+
   def firewallcreate
     options = build_parameters
-    firewall-cmd(*options)
+    firewalld(*options)
   end
 
   def create
@@ -49,10 +55,11 @@ Puppet::Type.type(:firewall).provide(:firewalld) do
 
   def destroy
     Puppet.debug('Currently this option is not working.')
+    #firewalldestroy
   end
 
   def exists?
-    @sourcefile = "/etc/firewalld/zones/#{@resource[:zone].xml}"
+    @sourcefile = "/etc/firewalld/zones/#{@resource[:zone]}.xml"
     if @resource[:permanent] == true
       if File.exist?("#{@sourcefile}") && File.open("#{@sourcefile}").grep(/protocol=#{@resource[:protocol]} port=#{@resource[:port]}/).any?
         create
@@ -62,7 +69,7 @@ Puppet::Type.type(:firewall).provide(:firewalld) do
         return false
       end
     else
-      create
-      return false
+      checkservices
     end
-  end 
+  end
+end
