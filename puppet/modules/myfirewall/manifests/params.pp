@@ -1,5 +1,5 @@
 class myfirewall::params {
 
-$firewall_status  = 'stopped'
+$firewall_status  = 'running'
 $firewall_service = 'firewalld'
 }

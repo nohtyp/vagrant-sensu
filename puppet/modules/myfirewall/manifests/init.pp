@@ -43,7 +43,7 @@ $firewall_status     = $myfirewall::params::firewall_status,
 
 anchor {'myfirewall::begin': } ->
  class {'::myfirewall::install':} ->
- #class {'::redis::config':} ->
+ class {'::myfirewall::config':} ->
  class {'::myfirewall::service':} ->
 anchor {'myfirewall::end':}
 

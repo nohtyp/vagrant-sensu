@@ -17,18 +17,17 @@ Puppet::Type.newtype(:firewall) do
   def insync?(is)
     @should.each do |should|
       case should
-      when :present
-        return true if is == :present
-      when :absent
-        return true if is == :absent
+        when :present
+          return true if is == :present
+        when :absent
+          return true if is == :absent
       end
     end
-
     return false
   end
 
   defaultto :present
-  end
+ end
 
   newparam(:name, :namevar => true) do
     desc 'The firewall rule name.'
@@ -38,27 +37,27 @@ Puppet::Type.newtype(:firewall) do
     desc 'Flush the rules for firewall zone'
   end
 
-  newvalue(:zone) do
+  newparam(:zone) do
     desc 'Zone to add/delete/modify firewall rules (default zone: public)'
   end
 
-  newvalue(:protocol) do
+  newparam(:protocol) do
     desc 'Protocol of service..i.e tcp or udp'
   end
   
-  newvalue(:port) do
+  newparam(:port) do
     desc 'Port to configure'
   end
 
-  newvalue(:service) do
+  newparam(:service) do
      desc 'Service to add to firewall'
   end
 
-  newvalue(:source) do
+  newparam(:source) do
     desc 'Ip source to allow'
   end
 
-  newvalue(:permanent, , :parent => Puppet::Property::Boolean) do
+  newparam(:permanent, :parent => Puppet::Property::Boolean) do
     desc 'Configure rule as a permanent rule values: true|false'
 
     defaultto true
