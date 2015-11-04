@@ -23,13 +23,26 @@ Puppet::Type.type(:firewall).provide(:firewalld) do
     params << "--zone=#{@resource[:zone]}" unless @resource[:zone].nil?
     params << "--add-service=#{@resource[:service]}" unless @resource[:service].nil?
     params << "--add-source=#{@resource[:source]}" unless @resource[:source].nil?
-    #params << '--permanent'   << @resource[:permanent] unless @resource[:permanent].nil?
     params << "--port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
+    params << "--remove-service=#{@resource[:removeservice]}" unless @resource[:removeservice].nil?
 
     params.each do |key|
       Puppet.debug("#{key}")
     end
     params
+  end
+
+  def firewallcreate
+    Puppet.debug("Creating temporary firewall rule")
+    options = build_parameters
+    firewalld(*options)
+  end
+
+  def firewallcreateperm
+    Puppet.debug("Creating permanent firewall rule")
+    options = build_parameters
+    firewalld(*options)
+    firewalld(*options, '--permanent')
   end
 
   def checkservices
@@ -39,37 +52,69 @@ Puppet::Type.type(:firewall).provide(:firewalld) do
       return true
     else
       Puppet.debug("Service is not here..")
-      return false
+      firewallcreate
     end
   end
 
-  def firewallcreate
+  def checkpermservices
+    fwlistperm = firewalld('--list-services', '--permanent')
+    if "#{fwlistperm}".include?"#{@resource[:service]}"
+      Puppet.debug("Service is created in firewall.")
+      return true
+    else
+      Puppet.debug("Service is not here..")
+      firewallcreateperm
+    end
+  end
+
+  def create
+    if @resource[:permanent] == true
+      Puppet.debug('Checking if permanent rule is active in firewall.')
+      checkpermservices
+    else
+      Puppet.debug('Checking if temporary rule is active in firewall.')
+      checkservices
+    end
+  end
+
+  def firewalldestroy
+    Puppet.debug("Deleting temporary firewall rule")
     options = build_parameters
     firewalld(*options)
   end
 
-  def create
-    Puppet.debug('Server does not have firewall rule in place. Creating firewall rule.')
-    firewallcreate
+  def firewalldestroyperm
+    Puppet.debug("Deleting permanent firewall rule")
+    options = build_parameters
+    firewalld(*options)
+    firewalld(*options, '--permanent')
   end
 
   def destroy
-    Puppet.debug('Currently this option is not working.')
-    #firewalldestroy
+    if @resource[:permanent] == true
+      Puppet.debug('Removing permanent rule in firewall.')
+      firewalldestroyperm
+    else
+      Puppet.debug('Removing temporary rule in firewall.')
+      firewalldestroy
+    end
   end
 
   def exists?
     @sourcefile = "/etc/firewalld/zones/#{@resource[:zone]}.xml"
     if @resource[:permanent] == true
-      if File.exist?("#{@sourcefile}") && File.open("#{@sourcefile}").grep(/protocol=#{@resource[:protocol]} port=#{@resource[:port]}/).any?
-        create
-        return false
-      elsif  File.exist?("#{@sourcefile}") && File.open("#{@sourcefile}").grep(/service name=#{@resource[:service]}/).any?
-        create
+      if File.exist?("#{@sourcefile}") && File.open("#{@sourcefile}").grep(/protocol="#{@resource[:protocol]}" port="#{@resource[:port]}"/).any?
+        Puppet.debug("The port/protocol #{@resource[:port]}/#{@resource[:protocol]} is located in #{@sourcefile}")
+      elsif  File.exist?("#{@sourcefile}") && File.open("#{@sourcefile}").grep(/service name="#{@resource[:service]}"/).any?
+        Puppet.debug("Service #{@resource[:service]} is located in #{@sourcefile}")
+      elsif  File.exist?("#{@sourcefile}") && File.open("#{@sourcefile}").grep(/service name="#{@resource[:removeservice]}"/).any?
+        Puppet.debug("Service #{@resource[:removeservice]} is located in #{@sourcefile}")
+      else
+        Puppet.debug("The service or port is not located in the #{@resource[:zone]}.xml file")
         return false
       end
     else
-      checkservices
+      Puppet.debug("The permanent option was not set to true.  Continuing with temporary firewall rule.")
     end
   end
 end

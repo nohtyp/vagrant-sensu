@@ -53,6 +53,10 @@ Puppet::Type.newtype(:firewall) do
      desc 'Service to add to firewall'
   end
 
+  newparam(:removeservice) do
+     desc 'Service to remove from firewall'
+  end
+
   newparam(:source) do
     desc 'Ip source to allow'
   end
