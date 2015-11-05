@@ -1,11 +1,9 @@
 class myfirewall::config inherits myfirewall {
 
-  firewall { 'Sensu Rule':
-    ensure     => present,
-    name       => 'public',
+  myfirewall { 'Sensu Rule':
+    ensure     => absent,
     zone       => 'public',
-    port       => '3000',
-    protocol   => 'tcp',
+    richrule   => 'rule family="ipv4" source address="192.168.0.0/24" service name="http" accept',
     permanent  => true,
    }
 }
