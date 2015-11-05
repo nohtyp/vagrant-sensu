@@ -2,7 +2,7 @@ require 'puppet/property/boolean'
 require 'puppet/type'
 
 Puppet::Type.newtype(:myfirewall) do
-  @doc = ''
+  @doc = 'This Firewall module will modify the firewalld firewall.'
 
   ensurable do
   
@@ -29,24 +29,26 @@ Puppet::Type.newtype(:myfirewall) do
   defaultto :present
  end
 
-  newparam(:name, :namevar => true) do
-    desc 'The firewall rule name.'
+  newparam(:flush) do
+    desc 'Flush the rules for firewall zone. (Not implemented)'
   end
 
-  newparam(:flush) do
-    desc 'Flush the rules for firewall zone'
+  newparam(:name, :namevar => true) do
+    desc 'Name for firewall rule. (required)'
   end
 
   newparam(:zone) do
-    desc 'Zone to add/delete/modify firewall rules (default zone: public)'
+    desc 'Zone to add/delete/modify firewall rules. (required)'
   end
 
   newparam(:protocol) do
-    desc 'Protocol to use for firewall..i.e tcp or udp'
+    desc 'Protocol to use. Required if using port (tcp or udp)'
   end
 
-  newparam(:tcp_udp) do
-    desc 'Adds both transport protocols to firewall..i.e tcp and udp (currently: tcp and udp)'
+  newparam(:tcp_udp, :parent => Puppet::Property::Boolean) do
+    desc 'Adds both protocols to firewall. values: (true|false)'
+ 
+    defaultto false
   end
   
   newparam(:port) do
@@ -66,7 +68,7 @@ Puppet::Type.newtype(:myfirewall) do
   end
 
   newparam(:permanent, :parent => Puppet::Property::Boolean) do
-    desc 'Configure rule as a permanent rule values: true|false'
+    desc 'Configure rule as a permanent rule. values: (true|false)'
 
     defaultto true
   end
