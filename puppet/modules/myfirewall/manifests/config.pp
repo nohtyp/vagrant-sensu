@@ -1,9 +1,15 @@
 class myfirewall::config inherits myfirewall {
 
-  myfirewall { 'Sensu Rule':
-    ensure     => absent,
+  myfirewall { 'First richrule':
+    ensure     => present,
     zone       => 'public',
-    richrule   => 'rule family="ipv4" source address="192.168.0.0/24" service name="http" accept',
+    richrule   => $myrichrule,
+    permanent  => true,
+   }
+  myfirewall { 'Second richrule':
+    ensure     => present,
+    zone       => 'public',
+    richrule   => $myrichrule1,
     permanent  => true,
    }
 }
