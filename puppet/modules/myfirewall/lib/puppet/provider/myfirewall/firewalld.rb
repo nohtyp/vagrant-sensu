@@ -160,7 +160,7 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
          Puppet.debug("service is not listed in temporary rules for firewall.")
          return false
        end 
-   end
+     end
    end
   end
 
