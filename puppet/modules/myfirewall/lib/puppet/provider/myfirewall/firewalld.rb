@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 
-Puppet::Type.type(:firewall).provide(:firewalld) do
+Puppet::Type.type(:myfirewall).provide(:firewalld) do
   @doc = <<-EOS
     This provider manages the firewalld firewall configs on the server. 
     If a machines firewall is already configured it does nothing unless the
@@ -16,21 +16,32 @@ Puppet::Type.type(:firewall).provide(:firewalld) do
   def build_parameters
     params = [] 
 
-    if @resource[:zone].nil? && @resource[:port].nil? && @resource[:protocol].nil?
-      fail('You need to provide a zone, port and protocol.')
-    elsif @resource[:zone].nil? && @resource[:service].nil?
-      fail('You need to provide a zone and service.') 
+    if @resource[:zone].nil? 
+      Puppet.debug("You have to provide a zone")
     end
     
     if "#{@resource[:ensure]}" == 'present'
       params << "--zone=#{@resource[:zone]}" unless @resource[:zone].nil?
       params << "--add-service=#{@resource[:service]}" unless @resource[:service].nil? 
       params << "--add-source=#{@resource[:source]}" unless @resource[:source].nil?
-      params << "--add-port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
+      params << "--add-rich-rule=#{@resource[:richrule]}" unless @resource[:richrule].nil?
+      if @resource[:tcp_udp]
+        params << "--add-port=#{@resource[:port]}/tcp" unless @resource[:port].nil?
+        params << "--add-port=#{@resource[:port]}/udp" unless @resource[:port].nil?
+      else
+        params << "--add-port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
+      end
     else
       params << "--zone=#{@resource[:zone]}" unless @resource[:zone].nil?
       params << "--remove-service=#{@resource[:service]}" unless @resource[:service].nil?
-      params << "--remove-port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
+      params << "--remove-source=#{@resource[:source]}" unless @resource[:source].nil?
+      params << "--remove-rich-rule=#{@resource[:richrule]}" unless @resource[:richrule].nil?
+      if @resource[:tcp_udp]
+        params << "--remove-port=#{@resource[:port]}/tcp" unless @resource[:port].nil?
+        params << "--remove-port=#{@resource[:port]}/udp" unless @resource[:port].nil?
+      else
+        params << "--remove-port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
+      end
     end
 
     params.each do |key|
@@ -87,6 +98,46 @@ Puppet::Type.type(:firewall).provide(:firewalld) do
        Puppet.debug("port/protocol is not listed in temporary rules for firewall.")
        return false
      end 
+   elsif @resource[:permanent] == true && @resource[:source]
+     Puppet.debug("Checking if permanent source rule is active in firewall")
+     fwlistperm = firewalld('--list-sources', '--permanent', "--zone=#{@resource[:zone]}")
+     if "#{fwlistperm}".include?"#{@resource[:source]}"
+       Puppet.debug("source is listed in permanent rules for firewall.")
+       return true
+     else
+       Puppet.debug("source is not listed in permanent rules for firewall.")
+       return false
+     end 
+   elsif @resource[:permanent] == false && @resource[:source]
+     Puppet.debug("Checking if temporary source rule is active in firewall")
+     fwlistperm = firewalld('--list-sources', "--zone=#{@resource[:zone]}")
+     if "#{fwlistperm}".include?"#{@resource[:source]}"
+       Puppet.debug("source is listed in temporary rules for firewall.")
+       return true
+     else
+       Puppet.debug("source is not listed in temporary rules for firewall.")
+       return false
+     end 
+   elsif @resource[:permanent] == true && @resource[:richrule]
+     Puppet.debug("Checking if permanent rich rule is active in firewall")
+     fwlistperm = firewalld('--list-rich-rules', '--permanent', "--zone=#{@resource[:zone]}")
+     if "#{fwlistperm}".include?"#{@resource[:richrule]}"
+       Puppet.debug("richrule is listed in permanent rules for firewall.")
+       return true
+     else
+       Puppet.debug("richrule is not listed in permanent rules for firewall.")
+       return false
+     end 
+   elsif @resource[:permanent] == false && @resource[:richrule]
+     Puppet.debug("Checking if temporary rich rule is active in firewall")
+     fwlistperm = firewalld('--list-rich-rules', "--zone=#{@resource[:zone]}")
+     if "#{fwlistperm}".include?"#{@resource[:richrule]}"
+       Puppet.debug("richrule is listed in temporary rules for firewall.")
+       return true
+     else
+       Puppet.debug("richrule is not listed in temporary rules for firewall.")
+       return false
+     end 
    elsif @resource[:permanent] == true
      Puppet.debug("Checking if permanent service rule is active in firewall")
      fwlistperm = firewalld('--list-services', "--zone=#{@resource[:zone]}", '--permanent')
@@ -127,16 +178,10 @@ Puppet::Type.type(:firewall).provide(:firewalld) do
   end
 
   def exists?
-    @sourcefile = "/etc/firewalld/zones/#{@resource[:zone]}.xml"
+    #@sourcefile = "/etc/firewalld/zones/#{@resource[:zone]}.xml"
     if @resource[:permanent] == true
-      if File.exist?("#{@sourcefile}") && File.open("#{@sourcefile}").grep(/protocol="#{@resource[:protocol]}" port="#{@resource[:port]}"/).any?
-        Puppet.debug("The port/protocol #{@resource[:port]}/#{@resource[:protocol]} is located in #{@sourcefile}")
-      elsif  File.exist?("#{@sourcefile}") && File.open("#{@sourcefile}").grep(/service name="#{@resource[:service]}"/).any?
-        Puppet.debug("Service #{@resource[:service]} is located in #{@sourcefile}")
-      else
-        Puppet.debug("The service or port is not located in the #{@resource[:zone]}.xml file")
-        check
-      end
+      Puppet.debug("The permanent option was set to true.  Continuing with permanent firewall rule.")
+      check
     else
       Puppet.debug("The permanent option was not set to true.  Continuing with temporary firewall rule.")
       check

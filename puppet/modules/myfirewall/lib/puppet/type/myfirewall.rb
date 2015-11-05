@@ -1,7 +1,7 @@
 require 'puppet/property/boolean'
 require 'puppet/type'
 
-Puppet::Type.newtype(:firewall) do
+Puppet::Type.newtype(:myfirewall) do
   @doc = ''
 
   ensurable do
@@ -42,7 +42,11 @@ Puppet::Type.newtype(:firewall) do
   end
 
   newparam(:protocol) do
-    desc 'Protocol of service..i.e tcp or udp'
+    desc 'Protocol to use for firewall..i.e tcp or udp'
+  end
+
+  newparam(:tcp_udp) do
+    desc 'Adds both transport protocols to firewall..i.e tcp and udp (currently: tcp and udp)'
   end
   
   newparam(:port) do
@@ -55,6 +59,10 @@ Puppet::Type.newtype(:firewall) do
 
   newparam(:source) do
     desc 'Ip source to allow'
+  end
+
+  newparam(:richrule) do
+    desc 'Add richrule to firewall'
   end
 
   newparam(:permanent, :parent => Puppet::Property::Boolean) do
