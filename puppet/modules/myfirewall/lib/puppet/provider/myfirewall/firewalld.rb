@@ -1,6 +1,5 @@
 # encoding: UTF-8
 
-
 Puppet::Type.type(:myfirewall).provide(:firewalld) do
   @doc = <<-EOS
     This provider manages the firewalld firewall configs on the server. 
@@ -9,9 +8,9 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
   EOS
 
   confine :osfamily => :redhat
+  defaultfor :operatingsystemmajrelease => 7
 
   commands :firewalld => 'firewall-cmd'
-
 
   def build_parameters
     params = [] 
