@@ -1,10 +1,11 @@
 class myfirewall::config inherits myfirewall {
 
-  firewall { 'Firewall Test':
-    ensure          => present,
-    name            => 'public',
-    zone            => 'public',
-    service   => 'https',
-    permanent       => true,
+  firewall { 'Sensu Rule':
+    ensure     => present,
+    name       => 'public',
+    zone       => 'public',
+    port       => '3000',
+    protocol   => 'tcp',
+    permanent  => true,
    }
 }
