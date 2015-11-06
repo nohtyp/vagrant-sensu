@@ -47,6 +47,7 @@ anchor {'myfirewall::begin': } ->
  class {'::myfirewall::install':} ->
  class {'::myfirewall::config':} ->
  class {'::myfirewall::service':} ->
+ class {'::myfirewall::reload_firewall':} ->
 anchor {'myfirewall::end':}
 
 }

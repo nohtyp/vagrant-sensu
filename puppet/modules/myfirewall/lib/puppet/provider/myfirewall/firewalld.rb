@@ -37,14 +37,19 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
       params << "--zone=#{@resource[:zone]}" unless @resource[:zone].nil?
       params << "--add-service=#{@resource[:service]}" unless @resource[:service].nil? 
       params << "--add-source=#{@resource[:source]}" unless @resource[:source].nil?
-      if @resource[:richrule].is_a?(Array) && resource[:richrule]
-        resource[:richrule].each do |rule|
+      if @resource[:richrule].is_a?(Array) && @resource[:richrule]
+        @resource[:richrule].each do |rule|
           params << "--add-rich-rule=#{rule}" 
         end
+      else
+          params << "--add-rich-rule=#{@resource[:richrule]}"
       end
+
       if @resource[:tcp_udp]
-        params << "--add-port=#{@resource[:port]}/tcp" unless @resource[:port].nil?
-        params << "--add-port=#{@resource[:port]}/udp" unless @resource[:port].nil?
+        protocols = [ 'tcp', 'udp' ]
+        protocols.each do |proto|
+          params << "--add-port=#{@resource[:port]}/#{proto}" unless @resource[:port].nil?
+        end
       else
         params << "--add-port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
       end
@@ -56,10 +61,15 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
         @resource[:richrule].each do |rule|
           params << "--remove-rich-rule=#{rule}" 
         end
+      else
+          params << "--remove-rich-rule=#{@resource[:richrule]}"
       end
+
       if @resource[:tcp_udp]
-        params << "--remove-port=#{@resource[:port]}/tcp" unless @resource[:port].nil?
-        params << "--remove-port=#{@resource[:port]}/udp" unless @resource[:port].nil?
+        protocols = [ 'tcp', 'udp' ]
+        protocols.each do |proto|
+          params << "--remove-port=#{@resource[:port]}/#{proto}" unless @resource[:port].nil?
+        end
       else
         params << "--remove-port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
       end
@@ -134,7 +144,10 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
            return false
           end
         end
-       else
+       elsif "#{fwlistperm}".include?"#{@resource[:richrule]}"
+         Puppet.debug("richrule is listed in permanent rules for firewall.")
+         return true
+       else 
          Puppet.debug("richrule is not listed in permanent rules for firewall.")
          return false
        end
@@ -184,8 +197,11 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
            return false
           end
         end
-       else
-         Puppet.debug("richrule is not listed in temporary rules for firewall.")
+       elsif "#{fwlistperm}".include?"#{@resource[:richrule]}"
+         Puppet.debug("richrule is listed in permanent rules for firewall.")
+         return true
+       else 
+         Puppet.debug("richrule is not listed in permanent rules for firewall.")
          return false
        end
      elsif @resource[:service]
