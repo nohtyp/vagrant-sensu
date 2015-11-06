@@ -7,10 +7,11 @@ class myfirewall::config inherits myfirewall {
   #  permanent  => true,
   # }
   myfirewall { 'Second richrule':
-    ensure     => present,
+    ensure     => absent,
     zone       => 'public',
     richrule   => $myrichrule1,
     permanent  => true,
     #require    => Myfirewall['First richrule']
+    notify     =>  Exec['Reloading firewall rules'],
    }
 }
