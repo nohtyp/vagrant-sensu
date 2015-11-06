@@ -9,9 +9,8 @@ class myfirewall::config inherits myfirewall {
   myfirewall { 'Second richrule':
     ensure     => absent,
     zone       => 'public',
-    richrule   => $myrichrule1,
-    permanent  => true,
-    #require    => Myfirewall['First richrule']
+    protocol   => 'tcp',
+    port       => '1534',
     notify     =>  Exec['Reloading firewall rules'],
    }
 }
