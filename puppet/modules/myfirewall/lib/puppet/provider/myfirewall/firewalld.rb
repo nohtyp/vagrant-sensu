@@ -15,15 +15,33 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
   def build_parameters
     params = [] 
 
-    if @resource[:zone].nil? 
-      Puppet.debug("You have to provide a zone")
+    if @resource[:zone] && "#{@resource[:ensure]}" == 'present'
+      if @resource[:port] && @resource[:port].nil? && @resource[:protocol] && @resource[:protocol].nil?
+        fail("You have to provide a zone, port and protocol")
+      elsif @resource[:service] && @resource[:service].nil?
+        fail("You have to provide a zone and service")
+      elsif @resource[:richrule] && @resource[:richrule].nil?
+        fail("You have to provide a zone and richrule")
+      end
+    elsif @resource[:zone] && "#{@resource[:ensure]}" == 'absent'
+      if @resource[:port] && @resource[:port].nil? && @resource[:protocol] && @resource[:protocol].nil?
+        fail("You have to provide a zone, port and protocol")
+      elsif @resource[:service] && @resource[:service].nil?
+        fail("You have to provide a zone and service")
+      elsif @resource[:richrule] && @resource[:richrule].nil?
+        fail("You have to provide a zone and richrule")
+      end
     end
     
     if "#{@resource[:ensure]}" == 'present'
       params << "--zone=#{@resource[:zone]}" unless @resource[:zone].nil?
       params << "--add-service=#{@resource[:service]}" unless @resource[:service].nil? 
       params << "--add-source=#{@resource[:source]}" unless @resource[:source].nil?
-      params << "--add-rich-rule=#{@resource[:richrule]}" unless @resource[:richrule].nil?
+      if @resource[:richrule].is_a?(Array) && resource[:richrule]
+        resource[:richrule].each do |rule|
+          params << "--add-rich-rule=#{rule}" 
+        end
+      end
       if @resource[:tcp_udp]
         params << "--add-port=#{@resource[:port]}/tcp" unless @resource[:port].nil?
         params << "--add-port=#{@resource[:port]}/udp" unless @resource[:port].nil?
@@ -34,7 +52,11 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
       params << "--zone=#{@resource[:zone]}" unless @resource[:zone].nil?
       params << "--remove-service=#{@resource[:service]}" unless @resource[:service].nil?
       params << "--remove-source=#{@resource[:source]}" unless @resource[:source].nil?
-      params << "--remove-rich-rule=#{@resource[:richrule]}" unless @resource[:richrule].nil?
+      if @resource[:richrule].is_a?(Array) && @resource[:richrule]
+        @resource[:richrule].each do |rule|
+          params << "--remove-rich-rule=#{rule}" 
+        end
+      end
       if @resource[:tcp_udp]
         params << "--remove-port=#{@resource[:port]}/tcp" unless @resource[:port].nil?
         params << "--remove-port=#{@resource[:port]}/udp" unless @resource[:port].nil?
@@ -46,7 +68,7 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
     params.each do |key|
       Puppet.debug("#{key}")
     end
-    params
+   params
   end
 
   def firewalldestroy
@@ -101,13 +123,21 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
      elsif @resource[:richrule]
        Puppet.debug("Checking if permanent rich rule is active in firewall")
        fwlistperm = firewalld('--list-rich-rules', '--permanent', "--zone=#{@resource[:zone]}")
-       if "#{fwlistperm}".include?"#{@resource[:richrule]}"
-         Puppet.debug("richrule is listed in permanent rules for firewall.")
-         return true
+       if @resource[:richrule].is_a?(Array) && @resource[:richrule]
+        resource[:richrule].each do |rule|
+          if "#{fwlistperm}".include?"#{rule}"
+            Puppet.debug("richrule is listed in permanent rules for firewall.")
+            next
+            #return true
+          else
+           Puppet.debug("richrule is not listed in permanent rules for firewall.")
+           return false
+          end
+        end
        else
          Puppet.debug("richrule is not listed in permanent rules for firewall.")
          return false
-       end 
+       end
      elsif @resource[:service]
        Puppet.debug("Checking if temporary service rule is active in firewall")
        fwlistperm = firewalld('--list-services', "--zone=#{@resource[:zone]}")
@@ -143,13 +173,21 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
      elsif @resource[:richrule]
        Puppet.debug("Checking if temporary rich rule is active in firewall")
        fwlistperm = firewalld('--list-rich-rules', "--zone=#{@resource[:zone]}")
-       if "#{fwlistperm}".include?"#{@resource[:richrule]}"
-         Puppet.debug("richrule is listed in temporary rules for firewall.")
-         return true
+       if @resource[:richrule].is_a?(Array) && @resource[:richrule]
+        resource[:richrule].each do |rule|
+          if "#{fwlistperm}".include?"#{rule}"
+            Puppet.debug("richrule is listed in temporary rules for firewall.")
+            next
+            #return true
+          else
+           Puppet.debug("richrule is not listed in temporary rules for firewall.")
+           return false
+          end
+        end
        else
          Puppet.debug("richrule is not listed in temporary rules for firewall.")
          return false
-       end 
+       end
      elsif @resource[:service]
        Puppet.debug("Checking if temporary service rule is active in firewall")
        fwlistperm = firewalld('--list-services', "--zone=#{@resource[:zone]}")

@@ -63,7 +63,7 @@ Puppet::Type.newtype(:myfirewall) do
     desc 'Ip source to allow'
   end
 
-  newparam(:richrule) do
+  newparam(:richrule, :array_matching => :all) do
     desc 'Add richrule to firewall'
   end
 
