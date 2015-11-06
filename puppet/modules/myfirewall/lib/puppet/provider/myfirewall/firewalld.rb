@@ -41,7 +41,7 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
         @resource[:richrule].each do |rule|
           params << "--add-rich-rule=#{rule}" 
         end
-      else
+      elsif @resource[:richrule] && !@resource[:richrule].nil?
           params << "--add-rich-rule=#{@resource[:richrule]}"
       end
 
@@ -61,7 +61,7 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
         @resource[:richrule].each do |rule|
           params << "--remove-rich-rule=#{rule}" 
         end
-      else
+      elsif @resource[:richrule] && !@resource[:richrule].nil?
           params << "--remove-rich-rule=#{@resource[:richrule]}"
       end
 
