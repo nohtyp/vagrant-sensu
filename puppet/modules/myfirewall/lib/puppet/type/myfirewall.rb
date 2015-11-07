@@ -51,11 +51,11 @@ Puppet::Type.newtype(:myfirewall) do
     defaultto false
   end
   
-  newparam(:port) do
+  newparam(:port, :array_matching => :all) do
     desc 'Port to configure'
   end
 
-  newparam(:service) do
+  newparam(:service, :array_matching => :all) do
      desc 'Service to add to firewall'
   end
 
