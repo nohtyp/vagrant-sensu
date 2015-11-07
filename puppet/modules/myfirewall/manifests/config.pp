@@ -10,7 +10,7 @@ class myfirewall::config inherits myfirewall {
     ensure     => absent,
     zone       => 'public',
     port       => $myport,
-    protocol   => 'tcp',
+    tcp_udp    => $myproto,
     notify     =>  Exec['Reloading firewall rules'],
    }
 }

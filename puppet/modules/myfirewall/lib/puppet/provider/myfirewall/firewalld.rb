@@ -51,25 +51,28 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
           params << "--add-rich-rule=#{@resource[:richrule]}"
       end
 
-      if @resource[:port].is_a?(Array) && @resource[:port]
+      if @resource[:port].is_a?(Array) && !@resource[:port].nil? && @resource[:tcp_udp].nil?
+        Puppet.debug("this is using resource port")
         @resource[:port].each do |myport|
           params << "--add-port=#{myport}/#{@resource[:protocol]}" 
         end
-      elsif @resource[:port] && !@resource[:port].nil?
+      elsif @resource[:port] && !@resource[:port].nil? && @resource[:tcp_udp].nil?
           params << "--add-port=#{@resource[:port]}/#{@resource[:protocol]}"
       end
 
       if @resource[:tcp_udp]
-        protocols = [ 'tcp', 'udp' ]
-        protocols.each do |proto|
+        protocols = [ 'udp', 'tcp' ]
           if @resource[:port].is_a?(Array) && !@resource[:port].nil?
-            @resource[:port].each do |myport|
-              params << "--add-port=#{myport}/#{proto}" 
+            protocols.each do | proto|
+              @resource[:port].each do |myport|
+                params << "--add-port=#{myport}/#{proto}" unless @resource[:port].nil?
+              end
             end
           elsif @resource[:port] && !@resource[:port].nil?
-            params << "--add-port=#{@resource[:port]}/#{proto}" unless @resource[:port].nil?
+            protocols.each do |proto|
+                params << "--add-port=#{@resource[:port]}/#{proto}" unless @resource[:port].nil?
+            end
           end
-        end
       end
 
     else
@@ -90,23 +93,30 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
           params << "--remove-rich-rule=#{@resource[:richrule]}"
       end
 
-      if @resource[:port].is_a?(Array) && @resource[:port]
+      if @resource[:port].is_a?(Array) && @resource[:port] && @resource[:tcp_udp].nil?
         @resource[:port].each do |myport|
           params << "--remove-port=#{myport}/#{@resource[:protocol]}" 
         end
-      else @resource[:port] && !@resource[:port].nil?
+      elsif @resource[:port] && !@resource[:port].nil? && @resource[:tcp_udp].nil?
+          Puppet.debug("this is the resource port")
           params << "--remove-port=#{@resource[:port]}/#{@resource[:protocol]}"
       end
 
       if @resource[:tcp_udp]
-        protocols = [ 'tcp', 'udp' ]
-        protocols.each do |proto|
-          params << "--remove-port=#{@resource[:port]}/#{proto}" unless @resource[:port].nil?
-        end
-      else
-        params << "--remove-port=#{@resource[:port]}/#{@resource[:protocol]}" unless @resource[:port].nil?
+        protocols = [ 'udp', 'tcp' ]
+          if @resource[:port].is_a?(Array) && !@resource[:port].nil?
+            protocols.each do | proto|
+              @resource[:port].each do |myport|
+                params << "--remove-port=#{myport}/#{proto}" unless @resource[:port].nil?
+              end
+            end
+          elsif @resource[:port] && !@resource[:port].nil?
+            protocols.each do |proto|
+                params << "--remove-port=#{@resource[:port]}/#{proto}" unless @resource[:port].nil?
+            end
+          end
       end
-    end
+     end
 
     params.each do |key|
       Puppet.debug("#{key}")
@@ -147,8 +157,8 @@ Puppet::Type.type(:myfirewall).provide(:firewalld) do
        fwlistperm = firewalld('--list-ports', "--zone=#{@resource[:zone]}", '--permanent')
        Puppet.debug("Checking if permanent port/protocol rule is active in firewall")
        if @resource[:port].is_a?(Array) && @resource[:port]
-        resource[:port].each do |myport|
-          if "#{fwlistperm}".include?"#{myport}"
+        resource[:port].each do |port|
+          if "#{fwlistperm}".include?"#{port}"
             Puppet.debug("port listed in permanent rules for firewall.")
             next
             #return true
