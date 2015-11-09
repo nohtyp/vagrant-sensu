@@ -12,10 +12,10 @@
 This is a sensu module that will install sensu on a vagrant box.  Currently the module
 installs and configures the following:
 
--`Redis`
--`RabbitMQ`
--`Sensu Server`
--`Yum repos`
+- `Redis`
+- `RabbitMQ`
+- `Sensu Server`
+- `Yum repos`
 
 
 The module currently only supports RedHat 7 family, but I am working to allow this 
