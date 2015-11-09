@@ -42,7 +42,7 @@ or provision the system with `--no-provision`.
 <pre>vagrant ssh test02</pre>
 
 #### Configure dns on system
-<pre>echo 'nameserver <your dns ip>' > /etc/resolv.conf</pre>
+<pre>echo 'nameserver your dns ip' > /etc/resolv.conf</pre>
 
 #### Exit system and provision
 <pre>exit
