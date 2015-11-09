@@ -72,5 +72,5 @@ Since your module is awesome, other users will want to play with it. Let them
 know what the ground rules for contributing are.
 
 ### Release Notes/Contributors/Etc
-This is the first release of this module.  I will be updating
-the notes when applicable.
+I will be adding configurations for sensu client/server configurations (later).
+Now you can copy the files to the client or server and do what you want.
