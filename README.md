@@ -1,5 +1,3 @@
-ll
-
 #### Table of Contents
 
 1. [Overview](#overview)
@@ -31,36 +29,36 @@ Clone the repository:
 git clone https://github.com/nohtyp/vagrant-sensu.git
 
 <pre>
-####Note: I am not using resolv.conf so you need to add it or
-####      or provision the system with `--no-provision`.
+Note: I am not using resolv.conf so you need to add it or
+or provision the system with `--no-provision`.
 </pre>
 
-## Configure system without proper dns
+### Configure system without proper dns
 
-### Build system without provisioning
+#### Build system without provisioning
 <pre>vagrant up test02 --no-provision</pre>
 
-### Log into system to configure dns
+#### Log into system to configure dns
 <pre>vagrant ssh test02</pre>
 
-### Configure dns on system
+#### Configure dns on system
 <pre>echo 'nameserver <your dns ip>' > /etc/resolv.conf</pre>
 
-### Exit system and provision
+#### Exit system and provision
 <pre>exit
-     vagrant provision test02
+vagrant provision test02
 </pre> 
 
 
-## Configure system with proper dns (using a resolv.conf puppet module)
+### Configure system with proper dns (using a resolv.conf puppet module)
 
-### Build system
+#### Build system
 <pre>vagrant up test02</pre>
 
-### Test server is running
+#### Test server is running
 <pre>http://192.168.2.201:3000</pre>
 
-## Limitations
+### Limitations
 
 Currently this module is compatible with RedHat 7 family.  I am working on 
 other OSes and will update this accordingly.  The module currently
@@ -68,11 +66,11 @@ supports the following options:
 
 Currently this module is working for RedHat 7 family.
 
-## Development
+### Development
 
 Since your module is awesome, other users will want to play with it. Let them
 know what the ground rules for contributing are.
 
-## Release Notes/Contributors/Etc
+### Release Notes/Contributors/Etc
 This is the first release of this module.  I will be updating
 the notes when applicable.
