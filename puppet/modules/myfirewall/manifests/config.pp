@@ -1,6 +1,6 @@
 class myfirewall::config inherits myfirewall {
 
-  myfirewall { 'Second richrule':
+  myfirewall { 'Sensu firewall port':
     ensure     => present,
     zone       => 'public',
     port       => $myports,
