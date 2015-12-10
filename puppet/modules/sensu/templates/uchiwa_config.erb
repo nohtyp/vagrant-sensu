@@ -1,0 +1,30 @@
+{
+"sensu": [ 
+    <%- if @sensu_sites.length <= 1 -%> 
+      { 
+      <%- @sensu_sites.each { |x|  x.each { |key, value| -%>
+       <%- if "#{value}".include? @redis_port -%>
+        "<%= "#{key}" -%>": <%= "#{value}" -%>,
+       <%- elsif "#{key}".include? "timeout" -%>
+        "<%= "#{key}" -%>": <%= "#{value}" %>
+       <%- else -%>
+        "<%= "#{key}" -%>": "<%= "#{value}" -%>",
+       <%- end -%>
+     <%- } }-%>
+     }
+    <% elsif @sensu_sites.length >= 1 %>
+      <% @sensu_sites.each { |x|  x.each { |key,value| } } %>
+        { 
+          "name": "<%= @sensu_sites[:key][:name]  %>",
+          "address": "<%= @sensu_sites[:key][:host] %>",
+          "port":  "<%= @sensu_sites[:key][:port] %>",
+          "timeout": "<%= @sensu_sites[:key][:timeout] %>"
+        }
+    <%end %>
+    ],
+"uchiwa": {
+  "host": "<%= @uchiwa_host %>",
+  "port": <%= @uchiwa_port %>,
+  "interval": <%= @uchiwa_interval %>
+  }
+}

@@ -6,7 +6,7 @@ class sensu::sensu_server::sensu_api_service inherits sensu {
     hasrestart    => true,
     hasstatus     => true,
     name          => 'sensu-api',
-    subscribe     => File['config file'],
+    subscribe     => File['sensu server config'],
   }
 } 
 

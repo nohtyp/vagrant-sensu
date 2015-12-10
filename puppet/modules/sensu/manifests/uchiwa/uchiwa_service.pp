@@ -6,7 +6,7 @@ class sensu::uchiwa::uchiwa_service inherits sensu {
     hasrestart    => true,
     hasstatus     => true,
     name          => 'uchiwa',
-    subscribe     => File['uchiwa file'],
+    subscribe     => File['uchiwa config'],
   }
 } 
 

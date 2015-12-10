@@ -1,6 +1,6 @@
 node 'test.familyguy.local' { 
-  include rabbitmq
+  class {'role::sensu_server':}
 }
 node 'test02.familyguy.local' { 
-  class {'role::sensu_server':}
+  class {'role::sensu_client':}
 }

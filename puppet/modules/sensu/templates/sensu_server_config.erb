@@ -1,0 +1,21 @@
+########################################################################
+#### This file is managed by Puppet.  Any changes will be overwritten
+#### within 30 minutes
+###########################################################################
+{
+ "rabbitmq": {
+    "host": "<%= @fqdn %>",
+    "port": "<%= @rabbitmq_port %>",
+    "user": "<%= @rabbitmq_user %>",
+    "password": "<%= @rabbitmq_pw %>",
+    "vhost": "<%= @rabbitmq_vhost %>"
+  },
+  "redis": {
+    "host": "<%= @fqdn %>",
+    "port": <%= @redis_port %> 
+  },
+  "api": {
+    "host": "<%= @fqdn %>",
+    "port": <%= @sensu_api_port %>
+  }
+}
