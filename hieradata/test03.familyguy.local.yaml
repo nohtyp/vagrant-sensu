@@ -11,3 +11,4 @@ rabbitmq::vhostuser: 'sensu'
 myfirewall::myports:
     - 3000
     - 5672
+    - 4567
