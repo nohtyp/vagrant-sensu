@@ -6,6 +6,12 @@
       "port": 4567,
       "timeout": 5
     }
+    {
+      "name": "Site 1",
+      "host": "test02.familyguy.local",
+      "port": 4567,
+      "timeout": 5
+    }
   ],
   "uchiwa": {
     "host": "0.0.0.0",

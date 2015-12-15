@@ -4,3 +4,6 @@ node 'test.familyguy.local' {
 node 'test02.familyguy.local' { 
   class {'role::sensu_client':}
 }
+node 'test03.familyguy.local' { 
+  class {'role::sensu_server':}
+}

@@ -17,7 +17,9 @@ $rabbitmq_pw             = 'sensu'
 $rabbitmq_vhost          = '/sensu'
 $redis_port              = 4567
 $sensu_api_port          = 3000
-$sensu_sites             = [ { name => 'Site 1', host => 'test.familyguy.local', port => 4567, timeout => 5 } ]
+$sensu_sites             = [ { name => 'Site 1', host => 'test.familyguy.local', port => 4567, timeout => 5 },
+                             { name => 'Site 2', host => 'test03.familyguy.local', port => 4567, timeout => 5 },
+                           ]
 $sensu_subscriptions     = [ 'test', 'foster' ]
 $uchiwa_host             = '0.0.0.0'
 $uchiwa_port             = 3000

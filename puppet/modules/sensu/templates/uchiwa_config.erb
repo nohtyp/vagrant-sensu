@@ -13,13 +13,22 @@
      <%- } }-%>
      }
     <% elsif @sensu_sites.length >= 1 %>
-      <% @sensu_sites.each { |x|  x.each { |key,value| } } %>
-        { 
-          "name": "<%= @sensu_sites[:key][:name]  %>",
-          "address": "<%= @sensu_sites[:key][:host] %>",
-          "port":  "<%= @sensu_sites[:key][:port] %>",
-          "timeout": "<%= @sensu_sites[:key][:timeout] %>"
-        }
+      <%- datacentercount = @sensu_sites.length -%>
+      <%- @sensu_sites.each { |x| x.each { |key, value| -%>
+       <%- if "#{value}".include? @redis_port -%>
+        "<%= "#{key}" -%>": <%= "#{value}" -%>,
+       <%- elsif "#{key}".include? "timeout" and datacentercount <= 1 -%>
+        "<%= "#{key}" -%>": <%= "#{value} }" %>
+        <%- datacentercount -= 1 -%>
+       <%- elsif "#{key}".include? "timeout" -%>
+        "<%= "#{key}" -%>": <%= "#{value} }," %>
+        <%- datacentercount -= 1 -%>
+       <%- elsif "#{key}".include? "name" -%>
+        { "<%= "#{key}" -%>": "<%= "#{value}" %>",
+       <%- else -%>
+        "<%= "#{key}" -%>": "<%= "#{value}" -%>",
+       <%- end -%>
+     <%- } }-%>
     <%end %>
     ],
 "uchiwa": {
