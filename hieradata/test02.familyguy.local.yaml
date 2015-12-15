@@ -5,4 +5,3 @@ rabbitmq::myvhost: '/sensu'
 rabbitmq::vhostuser: 'sensu'
 
 sensu::sensu_client: true
-

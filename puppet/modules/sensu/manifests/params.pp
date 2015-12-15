@@ -24,4 +24,5 @@ $sensu_subscriptions     = [ 'test', 'foster' ]
 $uchiwa_host             = '0.0.0.0'
 $uchiwa_port             = 3000
 $uchiwa_interval         = 5
+$uchiwa_server           = false
 }

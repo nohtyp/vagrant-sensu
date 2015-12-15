@@ -9,6 +9,5 @@ rabbitmq::vhostuser: 'sensu'
 #    - rule family="ipv4" source address="192.168.10.0/24" port port="3051" protocol="tcp" accept
 
 myfirewall::myports:
-    - 3000
     - 5672
     - 4567

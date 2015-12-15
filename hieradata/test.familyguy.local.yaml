@@ -12,3 +12,5 @@ myfirewall::myports:
     - 3000
     - 5672
     - 4567 
+
+sensu::uchiwa_server: true
