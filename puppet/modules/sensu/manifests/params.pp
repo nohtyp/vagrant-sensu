@@ -11,12 +11,14 @@ $sensu_config_path       = '/etc/sensu/config.json'
 $sensu_uchiwa_path       = '/etc/sensu/uchiwa.json'
 $sensu_client_path       = '/etc/sensu/conf.d/client.json'
 $rabbitmq_host           = 'test.familyguy.local'
-$rabbitmq_port           = '5672'
+$rabbitmq_port           = 5672
 $rabbitmq_user           = 'sensu'
 $rabbitmq_pw             = 'sensu'
 $rabbitmq_vhost          = '/sensu'
-$redis_port              = 4567
-$sensu_api_port          = 3000
+$redis_port              = 6379
+$redis_host              = 'test.familyguy.local'
+$sensu_api_host          = 'test.familyguy.local'
+$sensu_api_port          = 4567
 $sensu_sites             = [ { name => 'Site 1', host => 'test.familyguy.local', port => 4567, timeout => 5 },
                              { name => 'Site 2', host => 'test03.familyguy.local', port => 4567, timeout => 5 },
                            ]

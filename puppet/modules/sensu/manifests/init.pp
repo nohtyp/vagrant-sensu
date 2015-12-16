@@ -80,8 +80,8 @@ $uchiwa_server          = $sensu::params::uchiwa_server,
       anchor {'sensu::begin': } ->
        class {'::sensu::gems':} ->
        class {'::sensu::sensu_server::install':} ->
-       class {'::sensu::sensu_server::sensu_api_service':} ->
        class {'::sensu::sensu_server::sensu_server_config':} ->
+       class {'::sensu::sensu_server::sensu_api_service':} ->
        class {'::sensu::sensu_server::sensu_server_service':}
       anchor {'sensu::end':}
      }
@@ -106,8 +106,8 @@ $uchiwa_server          = $sensu::params::uchiwa_server,
       anchor {'sensu::begin': } ->
        class {'::sensu::gems':} ->
        class {'::sensu::sensu_server::install':} ->
-       class {'::sensu::sensu_server::sensu_api_service':} ->
        class {'::sensu::sensu_server::sensu_server_config':} ->
+       class {'::sensu::sensu_server::sensu_api_service':} ->
        class {'::sensu::sensu_server::sensu_server_service':} ->
        class {'::sensu::uchiwa::uchiwa_config':}
        class {'::sensu::uchiwa::uchiwa_service':}

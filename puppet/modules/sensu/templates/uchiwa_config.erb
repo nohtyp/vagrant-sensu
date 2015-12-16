@@ -3,10 +3,12 @@
     <%- if @sensu_sites.length <= 1 -%> 
       { 
       <%- @sensu_sites.each { |x|  x.each { |key, value| -%>
-       <%- if "#{value}".include? @redis_port -%>
+       <%- if "#{key}".include? "port" -%>
         "<%= "#{key}" -%>": <%= "#{value}" -%>,
        <%- elsif "#{key}".include? "timeout" -%>
         "<%= "#{key}" -%>": <%= "#{value}" %>
+       <%- elsif "#{key}".include? "host" -%>
+         "<%= "#{key}" -%>": "<%= "#{value}" %>",
        <%- else -%>
         "<%= "#{key}" -%>": "<%= "#{value}" -%>",
        <%- end -%>
@@ -15,7 +17,7 @@
     <% elsif @sensu_sites.length >= 1 %>
       <%- datacentercount = @sensu_sites.length -%>
       <%- @sensu_sites.each { |x| x.each { |key, value| -%>
-       <%- if "#{value}".include? @redis_port -%>
+       <%- if "#{key}".include? "port" -%>
         "<%= "#{key}" -%>": <%= "#{value}" -%>,
        <%- elsif "#{key}".include? "timeout" and datacentercount <= 1 -%>
         "<%= "#{key}" -%>": <%= "#{value} }" %>
@@ -25,6 +27,8 @@
         <%- datacentercount -= 1 -%>
        <%- elsif "#{key}".include? "name" -%>
         { "<%= "#{key}" -%>": "<%= "#{value}" %>",
+       <%- elsif "#{key}".include? "host" -%>
+         "<%= "#{key}" -%>": "<%= "#{value}" %>",
        <%- else -%>
         "<%= "#{key}" -%>": "<%= "#{value}" -%>",
        <%- end -%>

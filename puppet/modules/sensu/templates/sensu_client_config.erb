@@ -5,5 +5,13 @@
     "user": "<%= @rabbitmq_user %>",
     "password": "<%= @rabbitmq_pw %>",
     "vhost": "<%= @rabbitmq_vhost %>"
-  }
+    },
+  "redis": {
+    "host": "<%= @redis_host %>",
+    "port": <%= @redis_port %> 
+    },
+  "api": {
+    "host": "<%= @sensu_api_host %>",
+    "port": <%= @sensu_api_port %> 
+   }
 }
