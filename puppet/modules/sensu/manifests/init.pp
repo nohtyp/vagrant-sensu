@@ -91,6 +91,7 @@ $uchiwa_server          = $sensu::params::uchiwa_server,
        class {'::sensu::sensu_client::install':} ->
        class {'::sensu::sensu_client::sensu_config':} ->
        class {'::sensu::sensu_client::sensu_client_service':}
+       class {'::sensu::sensu_client::sensu_check':}
       anchor {'sensu::end':}
      }
     elsif $uchiwa_server == false and $use_sensu_repo == true and $sensu_client == true {
@@ -100,6 +101,7 @@ $uchiwa_server          = $sensu::params::uchiwa_server,
        class {'::sensu::sensu_client::install':} ->
        class {'::sensu::sensu_client::sensu_config':} ->
        class {'::sensu::sensu_client::sensu_client_service':}
+       class {'::sensu::sensu_client::sensu_check':}
       anchor {'sensu::end':}
      }
     elsif $uchiwa_server == true and $use_sensu_repo == false and $sensu_client == false {
