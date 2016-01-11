@@ -110,6 +110,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
       json_not_in_file += 1
     end
   
+   if json_not_in_file == 0
     sensu_value = 0
     myhash.each do | k, v |
       #puts "key: #{k} value: #{v}...value class: #{v.class}"
@@ -146,6 +147,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
         sensu_value += 1
       end
      end
+    end
     
     if json_not_in_file == 1
      return false
@@ -153,7 +155,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
      return false
     elsif "#{@resource[:ensure]}" == 'absent'
       return true
-    elsif sensu_value >= 1
+    elsif sensu_value == 1
      return false
     else
       return true
