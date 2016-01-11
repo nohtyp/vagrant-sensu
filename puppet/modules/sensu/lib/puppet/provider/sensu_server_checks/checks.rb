@@ -117,8 +117,8 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
       if file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Array)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:subscribers]
           debug("#{k} is an Array!")
-        else
-          debug("Adding to value from Array #{k}")
+        else file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:handlers]
+          debug("#{k} is a Array!")
         end
       elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Fixnum)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:ttl].to_i
@@ -139,7 +139,9 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
           debug("#{k} is a String!")
         elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:type]
           debug("#{k} is a String!")
-        else file_hash["checks"][@resource[:checks]]["#{k}"] != @resource[:handler]
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] != @resource[:handler]
+          debug("#{k} is a String!")
+        else file_hash["checks"][@resource[:checks]]["#{k}"] != @resource[:source]
           debug("#{k} is a String!")
         end
       else
