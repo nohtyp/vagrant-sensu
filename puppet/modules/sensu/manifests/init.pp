@@ -59,10 +59,10 @@ $uchiwa_server          = $sensu::params::uchiwa_server,
        class {'::sensu::gems':} ->
        class {'::sensu::sensu_repo':} ->
        class {'::sensu::sensu_server::install':} ->
+       class {'::sensu::sensu_server::sensu_check':} ->
        class {'::sensu::sensu_server::sensu_server_config':} ->
        class {'::sensu::sensu_server::sensu_api_service':} ->
-       class {'::sensu::sensu_server::sensu_check':} ->
-       class {'::sensu::sensu_server::sensu_server_service':} ->
+       class {'::sensu::sensu_server::sensu_server_service':}
        class {'::sensu::uchiwa::uchiwa_config':} 
        class {'::sensu::uchiwa::uchiwa_service':}
       anchor {'sensu::end':}
@@ -72,16 +72,17 @@ $uchiwa_server          = $sensu::params::uchiwa_server,
        class {'::sensu::gems':} ->
        class {'::sensu::sensu_repo':} ->
        class {'::sensu::sensu_server::install':} ->
+       class {'::sensu::sensu_server::sensu_check':} ->
        class {'::sensu::sensu_server::sensu_server_config':} ->
        class {'::sensu::sensu_server::sensu_api_service':} ->
-       class {'::sensu::sensu_server::sensu_check':} ->
-       class {'::sensu::sensu_server::sensu_server_service':} ->
+       class {'::sensu::sensu_server::sensu_server_service':}
       anchor {'sensu::end':}
      }
     elsif $uchiwa_server == false and $use_sensu_repo == false and $sensu_client == false {
       anchor {'sensu::begin': } ->
        class {'::sensu::gems':} ->
        class {'::sensu::sensu_server::install':} ->
+       class {'::sensu::sensu_server::sensu_check':} ->
        class {'::sensu::sensu_server::sensu_server_config':} ->
        class {'::sensu::sensu_server::sensu_api_service':} ->
        class {'::sensu::sensu_server::sensu_server_service':}
@@ -102,18 +103,17 @@ $uchiwa_server          = $sensu::params::uchiwa_server,
        class {'::sensu::sensu_client::install':} ->
        class {'::sensu::sensu_client::sensu_config':} ->
        class {'::sensu::sensu_client::sensu_client_service':}
-       class {'::sensu::sensu_server::sensu_check':}
       anchor {'sensu::end':}
      }
     elsif $uchiwa_server == true and $use_sensu_repo == false and $sensu_client == false {
       anchor {'sensu::begin': } ->
        class {'::sensu::gems':} ->
        class {'::sensu::sensu_server::install':} ->
+       class {'::sensu::sensu_server::sensu_check':} ->
        class {'::sensu::sensu_server::sensu_server_config':} ->
        class {'::sensu::sensu_server::sensu_api_service':} ->
-       class {'::sensu::sensu_server::sensu_check':} ->
-       class {'::sensu::sensu_server::sensu_server_service':} ->
-       class {'::sensu::uchiwa::uchiwa_config':}
+       class {'::sensu::sensu_server::sensu_server_service':}
+       class {'::sensu::uchiwa::uchiwa_config':} 
        class {'::sensu::uchiwa::uchiwa_service':}
       anchor {'sensu::end':}
      }

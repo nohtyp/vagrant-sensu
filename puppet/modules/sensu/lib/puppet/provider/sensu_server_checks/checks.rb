@@ -17,7 +17,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
     end
 
     myvalues['command'] = @resource[:command] unless @resource[:command].nil?
-    myvalues['subsribers'] = @resource[:subscribers] unless @resource[:command].nil?
+    myvalues['subscribers'] = @resource[:subscribers] unless @resource[:command].nil?
     myvalues['interval'] = @resource[:interval] unless @resource[:interval].nil?
     myvalues['type'] = @resource[:type] unless @resource[:type].nil?
     myvalues['extension'] = @resource[:extension] unless @resource[:extension].nil?
@@ -45,7 +45,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
     end
 
     check_hash['command'] = @resource[:command] unless @resource[:command].nil?
-    check_hash['subsribers'] = @resource[:subscribers] unless @resource[:command].nil?
+    check_hash['subscribers'] = @resource[:subscribers] unless @resource[:command].nil?
     check_hash['interval'] = @resource[:interval].to_i unless @resource[:interval].nil?
     check_hash['type'] = @resource[:type] unless @resource[:type].nil?
     check_hash['extension'] = @resource[:extension] unless @resource[:extension].nil?
@@ -70,13 +70,25 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
    new_hash = {}
    info("checking if #{@resource[:config_file]} needs contents modified")
    myjson_hash = check_params
-   sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
-   new_hash['checks'] = sensu_client_hash
-   #warn("This is myjson_hash: #{myjson_hash}")
-   #warn("This is sensu_client_hash: #{sensu_client_hash}")
-   #warn("This is new_hash: #{new_hash}")
-   myfile = File.open(@resource[:config_file], "w")
-   myfile.write(JSON.pretty_generate new_hash)
+   if myjson_hash['subscribers'].is_a?(Array)
+     sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
+     new_hash['checks'] = sensu_client_hash
+     #warn("This is myjson_hash: #{myjson_hash}")
+     #warn("This is sensu_client_hash: #{sensu_client_hash}")
+     #warn("This is new_hash: #{new_hash}")
+     myfile = File.open(@resource[:config_file], "w")
+     myfile.write(JSON.pretty_generate new_hash)
+   else
+     myjson_hash['subscribers'] = [@resource[:subscribers]]
+     sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
+     new_hash['checks'] = sensu_client_hash
+     #warn("This is myjson_hash #2: #{myjson_hash}")
+     #warn("This is sensu_client_hash #2: #{sensu_client_hash}")
+     #warn("This is new_hash #2: #{new_hash}")
+     myfile = File.open(@resource[:config_file], "w")
+     myfile.write(JSON.pretty_generate new_hash)
+   end
+     
   end
 
   def destroy
@@ -97,6 +109,48 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
       debug("The contents of #{@resource[:config_file]} is not in json format")
       json_not_in_file += 1
     end
+  
+    sensu_value = 0
+
+    myhash.each do | k, v |
+      if file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Array)
+        if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:subscribers]
+          debug("#{k} is an Array!")
+        else
+          debug("Adding to value from Array #{k}")
+          sensu_value += 1
+        end
+      elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Fixnum)
+        if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:ttl].to_i
+          debug("#{k} is a Fixnum!")
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:interval].to_i
+          debug("#{k} is a Fixnum!")
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:timeout].to_i
+          debug("#{k} is a Fixnum!")
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:low_flap_threshold].to_i
+          debug("#{k} is a Fixnum!")
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:high_flap_threshold].to_i
+          debug("#{k} is a Fixnum!")
+        else
+          debug("Adding to value from Fixnum #{k}")
+          sensu_value += 1
+        end
+      elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(String)
+        if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:extension]
+          debug("#{k} is a String!")
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:command]
+          debug("#{k} is a String!")
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:type]
+          debug("#{k} is a String!")
+        else
+          debug("Adding to value from String #{k}")
+          sensu_value += 1
+        end
+      else
+        debug("Reached the end of the loop!")
+      end
+    end
+      
     
     if json_not_in_file == 1
      return false
@@ -104,6 +158,8 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
      return false
     elsif "#{@resource[:ensure]}" == 'absent'
       return true
+    elsif sensu_value >= 1
+     return false
     else
       return true
     end
