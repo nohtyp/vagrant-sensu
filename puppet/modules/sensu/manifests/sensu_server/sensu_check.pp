@@ -12,7 +12,7 @@ class sensu::sensu_server::sensu_check inherits sensu {
     ensure      => present,
     checks      => 'test',
     config_file => '/etc/sensu/conf.d/test.json',
-    command     => '/etc/sensu/plugins/sensu-plugins-chef/bincheck-chef-client.rb',
+    command     => '/etc/sensu/plugins/sensu-plugins-chef/bin/check-chef-client.rb',
     subscribers => [ 'test', 'fake' ],
     interval    => 60,
     ttl         => 5,
