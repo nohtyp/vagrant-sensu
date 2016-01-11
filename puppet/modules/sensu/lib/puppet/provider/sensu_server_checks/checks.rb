@@ -111,14 +111,13 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
     end
   
     sensu_value = 0
-
     myhash.each do | k, v |
+      #puts "key: #{k} value: #{v}...value class: #{v.class}"
       if file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Array)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:subscribers]
           debug("#{k} is an Array!")
         else
           debug("Adding to value from Array #{k}")
-          sensu_value += 1
         end
       elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Fixnum)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:ttl].to_i
@@ -129,11 +128,8 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
           debug("#{k} is a Fixnum!")
         elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:low_flap_threshold].to_i
           debug("#{k} is a Fixnum!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:high_flap_threshold].to_i
+        else file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:high_flap_threshold].to_i
           debug("#{k} is a Fixnum!")
-        else
-          debug("Adding to value from Fixnum #{k}")
-          sensu_value += 1
         end
       elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(String)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:extension]
@@ -142,15 +138,14 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
           debug("#{k} is a String!")
         elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:type]
           debug("#{k} is a String!")
-        else
-          debug("Adding to value from String #{k}")
-          sensu_value += 1
+        else file_hash["checks"][@resource[:checks]]["#{k}"] != @resource[:handler]
+          debug("#{k} is a String!")
         end
       else
         debug("Reached the end of the loop!")
+        sensu_value += 1
       end
-    end
-      
+     end
     
     if json_not_in_file == 1
      return false
