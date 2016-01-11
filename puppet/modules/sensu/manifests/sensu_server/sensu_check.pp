@@ -1,4 +1,4 @@
-class sensu::sensu_client::sensu_check inherits sensu {
+class sensu::sensu_server::sensu_check inherits sensu {
 
   file { '/etc/sensu/test':
     ensure  => present,
