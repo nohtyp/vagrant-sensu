@@ -71,6 +71,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
    info("checking if #{@resource[:config_file]} needs contents modified")
    myjson_hash = check_params
    if myjson_hash['subscribers'].is_a?(Array)
+     myjson_hash['handlers'] = [@resource[:handlers]]
      sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
      new_hash['checks'] = sensu_client_hash
      #warn("This is myjson_hash: #{myjson_hash}")
@@ -80,6 +81,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
      myfile.write(JSON.pretty_generate new_hash)
    else
      myjson_hash['subscribers'] = [@resource[:subscribers]]
+     myjson_hash['handlers'] = [@resource[:handlers]]
      sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
      new_hash['checks'] = sensu_client_hash
      #warn("This is myjson_hash #2: #{myjson_hash}")
@@ -117,8 +119,11 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
       if file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Array)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:subscribers]
           debug("#{k} is an Array!")
-        else file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:handlers]
-          debug("#{k} is a Array!")
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == [@resource[:handlers]]
+          debug("#{k} is an Array!")
+        else
+          debug("Reached the end of the array checks!")
+          sensu_value += 1
         end
       elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Fixnum)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:ttl].to_i
@@ -129,8 +134,11 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
           debug("#{k} is a Fixnum!")
         elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:low_flap_threshold].to_i
           debug("#{k} is a Fixnum!")
-        else file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:high_flap_threshold].to_i
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:high_flap_threshold].to_i
           debug("#{k} is a Fixnum!")
+        else
+          debug("Reached the end of the fixnum checks!")
+          sensu_value += 1
         end
       elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(String)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:extension]
@@ -139,10 +147,13 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
           debug("#{k} is a String!")
         elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:type]
           debug("#{k} is a String!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] != @resource[:handler]
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:handler]
           debug("#{k} is a String!")
-        else file_hash["checks"][@resource[:checks]]["#{k}"] != @resource[:source]
+        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:source]
           debug("#{k} is a String!")
+        else
+          debug("Reached the end of the string checks!")
+          sensu_value += 1
         end
       else
         debug("Reached the end of the loop!")
