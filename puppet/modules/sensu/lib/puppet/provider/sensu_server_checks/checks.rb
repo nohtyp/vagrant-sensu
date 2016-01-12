@@ -71,7 +71,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
    info("checking if #{@resource[:config_file]} needs contents modified")
    myjson_hash = check_params
    if myjson_hash['subscribers'].is_a?(Array)
-     myjson_hash['handlers'] = [@resource[:handlers]]
+     myjson_hash['handlers'] = [@resource[:handlers]] unless @resource[:handlers].nil?
      sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
      new_hash['checks'] = sensu_client_hash
      #warn("This is myjson_hash: #{myjson_hash}")
@@ -80,8 +80,8 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
      myfile = File.open(@resource[:config_file], "w")
      myfile.write(JSON.pretty_generate new_hash)
    else
-     myjson_hash['subscribers'] = [@resource[:subscribers]]
-     myjson_hash['handlers'] = [@resource[:handlers]]
+     myjson_hash['subscribers'] = [@resource[:subscribers]] unless @resource[:handlers].nil?
+     myjson_hash['handlers'] = [@resource[:handlers]] unless @resource[:handlers].nil?
      sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
      new_hash['checks'] = sensu_client_hash
      #warn("This is myjson_hash #2: #{myjson_hash}")

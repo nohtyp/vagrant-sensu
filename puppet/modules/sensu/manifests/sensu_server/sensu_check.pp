@@ -11,7 +11,7 @@ class sensu::sensu_server::sensu_check inherits sensu {
   sensu_server_checks { '/etc/sensu/conf.d/test.json':
     ensure      => present,
     checks      => 'test',
-    handlers    => [ '/etc/sensu/plugins/sensu-plugins-chef/bin/handler-chef-node.rb' ],
+    handler     => '/etc/sensu/plugins/sensu-plugins-chef/bin/handler-chef-node.rb',
     config_file => '/etc/sensu/conf.d/test.json',
     command     => '/etc/sensu/plugins/sensu-plugins-chef/bin/check-chef-client.rb',
     subscribers => [ 'test', 'fake' ],
