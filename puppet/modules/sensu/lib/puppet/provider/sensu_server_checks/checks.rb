@@ -115,7 +115,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
    if json_not_in_file == 0
     sensu_value = 0
     myhash.each do | k, v |
-      #puts "key: #{k} value: #{v}...value class: #{v.class}"
+      puts "key: #{k} value: #{v}...value class: #{v.class}"
       if file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Array)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:subscribers]
           debug("#{k} is an Array!")
@@ -168,7 +168,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
      return false
     elsif "#{@resource[:ensure]}" == 'absent'
       return true
-    elsif sensu_value == 1
+    elsif sensu_value >= 1
      return false
     else
       return true
