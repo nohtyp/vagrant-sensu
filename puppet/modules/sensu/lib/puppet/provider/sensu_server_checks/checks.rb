@@ -18,17 +18,17 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
 
     myvalues['command'] = @resource[:command] unless @resource[:command].nil?
     myvalues['subscribers'] = @resource[:subscribers] unless @resource[:command].nil?
-    myvalues['interval'] = @resource[:interval] unless @resource[:interval].nil?
+    myvalues['interval'] = @resource[:interval].to_i unless @resource[:interval].nil?
     myvalues['type'] = @resource[:type] unless @resource[:type].nil?
     myvalues['extension'] = @resource[:extension] unless @resource[:extension].nil?
     myvalues['standalone'] = @resource[:standalone] unless @resource[:standalone].nil?
     myvalues['publish'] = @resource[:publish] unless @resource[:publish].nil?
-    myvalues['timeout'] = @resource[:timeout] unless @resource[:timeout].nil?
-    myvalues['ttl'] = @resource[:ttl] unless @resource[:ttl].nil?
+    myvalues['timeout'] = @resource[:timeout].to_i unless @resource[:timeout].nil?
+    myvalues['ttl'] = @resource[:ttl].to_i unless @resource[:ttl].nil?
     myvalues['handle'] = @resource[:handle] unless @resource[:handle].nil?
     myvalues['handler'] = @resource[:handler] unless @resource[:handler].nil?
-    myvalues['low_flap_threshold'] = @resource[:low_flap_threshold] unless @resource[:low_flap_threshold].nil?
-    myvalues['high_flap_threshold'] = @resource[:high_flap_threshold] unless @resource[:high_flap_threshold].nil?
+    myvalues['low_flap_threshold'] = @resource[:low_flap_threshold].to_i unless @resource[:low_flap_threshold].nil?
+    myvalues['high_flap_threshold'] = @resource[:high_flap_threshold].to_i unless @resource[:high_flap_threshold].nil?
     myvalues['source'] = @resource[:source] unless @resource[:source].nil?
     myvalues['aggregate'] = @resource[:aggregate] unless @resource[:aggregate].nil?
     myvalues['handlers'] = @resource[:handlers] unless @resource[:handlers].nil?
@@ -115,7 +115,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
    if json_not_in_file == 0
     sensu_value = 0
     myhash.each do | k, v |
-      puts "key: #{k} value: #{v}...value class: #{v.class}"
+      #puts "key: #{k} value: #{v}...value class: #{v.class}"
       if file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Array)
         if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:subscribers]
           debug("#{k} is an Array!")
@@ -168,9 +168,10 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
      return false
     elsif "#{@resource[:ensure]}" == 'absent'
       return true
-    elsif sensu_value >= 1
+    elsif sensu_value > 0
      return false
     else
+      #puts "I am exiting sensu_value: #{sensu_value}"
       return true
     end
   end

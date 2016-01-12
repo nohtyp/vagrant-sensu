@@ -2,9 +2,9 @@ class sensu::params {
 
 $sensu_base_url          = 'http://repos.sensuapp.org/yum/el/$releasever/$basearch/'
 $epel_url                = 'http://dl.fedoraproject.org/pub/epel/7/x86_64/'
-$gempackages             = ['sensu-plugin']
+$gempackages             = ['sensu-plugin', 'sys-filesystem']
 $sensu_package           = ['sensu', 'rubygems', 'uchiwa']
-$sensu_client_package    = ['sensu', 'rubygems']
+$sensu_client_package    = ['sensu', 'rubygems', 'ruby-devel', 'kernel-devel', 'gcc' ]
 $use_sensu_repo          = true
 $sensu_client            = false
 $sensu_config_path       = '/etc/sensu/config.json'
