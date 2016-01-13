@@ -79,6 +79,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
      #warn("This is new_hash: #{new_hash}")
      myfile = File.open(@resource[:config_file], "w")
      myfile.write(JSON.pretty_generate new_hash)
+     myfile.close
    else
      myjson_hash['subscribers'] = [@resource[:subscribers]] unless @resource[:handlers].nil?
      myjson_hash['handlers'] = [@resource[:handlers]] unless @resource[:handlers].nil?
@@ -86,9 +87,10 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
      new_hash['checks'] = sensu_client_hash
      #warn("This is myjson_hash #2: #{myjson_hash}")
      #warn("This is sensu_client_hash #2: #{sensu_client_hash}")
-     #warn("This is new_hash #2: #{new_hash}")
+     warn("This is new_hash #2: #{new_hash}")
      myfile = File.open(@resource[:config_file], "w")
      myfile.write(JSON.pretty_generate new_hash)
+     myfile.close
    end
      
   end
@@ -105,7 +107,6 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
     json_not_in_file = 0
     opened_file = File.read("#{@resource[:config_file]}")
     begin
-      debug("The contents of #{@resource[:config_file]} is in json format")
       file_hash = JSON.parse(opened_file)
     rescue
       debug("The contents of #{@resource[:config_file]} is not in json format")
@@ -159,23 +160,21 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
         debug("Reached the end of the loop!")
         sensu_value += 1
       end
-     end
     end
-    
-    if json_not_in_file == 1
+   elsif json_not_in_file == 1
      return false
-    elsif file_hash.empty?
+   elsif file_hash.empty?
      return false
-    elsif "#{@resource[:ensure]}" == 'absent'
-      return true
-    elsif sensu_value > 0
-     return false
-    else
-      #puts "I am exiting sensu_value: #{sensu_value}"
-      return true
-    end
+   elsif "#{@resource[:ensure]}" == 'absent'
+     return true
+   elsif sensu_value > 0
+    return false
+   else
+     puts "I am exiting sensu_value: #{sensu_value}"
+     return true
+   end
   end
-  
+
   def exists?
     if File.exists?("#{@resource[:config_file]}")
        check 
