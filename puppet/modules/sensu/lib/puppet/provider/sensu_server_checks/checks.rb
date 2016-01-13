@@ -118,39 +118,24 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
     myhash.each do | k, v |
       #puts "key: #{k} value: #{v}...value class: #{v.class}"
       if file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Array)
-        if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:subscribers]
+        if "#{file_hash["checks"][@resource[:checks]]["#{k}"]}" == "#{v}"
           debug("#{k} is an Array!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == [@resource[:handlers]]
-          debug("#{k} is an Array!")
+          #puts "first value:#{file_hash["checks"][@resource[:checks]]["#{k}"]}..value:#{v}"
         else
           debug("Reached the end of the array checks!")
+          #puts "first value:#{file_hash["checks"][@resource[:checks]]["#{k}"]}..value:#{v}"
           sensu_value += 1
         end
       elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(Fixnum)
-        if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:ttl].to_i
-          debug("#{k} is a Fixnum!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:interval].to_i
-          debug("#{k} is a Fixnum!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:timeout].to_i
-          debug("#{k} is a Fixnum!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:low_flap_threshold].to_i
-          debug("#{k} is a Fixnum!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:high_flap_threshold].to_i
+        if "#{file_hash["checks"][@resource[:checks]]["#{k}"]}" == "#{v.to_i}"
           debug("#{k} is a Fixnum!")
         else
           debug("Reached the end of the fixnum checks!")
+          #puts "first value:#{file_hash["checks"][@resource[:checks]]["#{k}"]}..value:#{v}"
           sensu_value += 1
         end
       elsif file_hash["checks"][@resource[:checks]]["#{k}"].is_a?(String)
-        if file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:extension]
-          debug("#{k} is a String!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:command]
-          debug("#{k} is a String!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:type]
-          debug("#{k} is a String!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:handler]
-          debug("#{k} is a String!")
-        elsif file_hash["checks"][@resource[:checks]]["#{k}"] == @resource[:source]
+        if "#{file_hash["checks"][@resource[:checks]]["#{k}"]}" == "#{v}"
           debug("#{k} is a String!")
         else
           debug("Reached the end of the string checks!")
@@ -161,18 +146,22 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
         sensu_value += 1
       end
     end
-   elsif json_not_in_file == 1
-     return false
-   elsif file_hash.empty?
-     return false
-   elsif "#{@resource[:ensure]}" == 'absent'
-     return true
-   elsif sensu_value > 0
-    return false
-   else
-     puts "I am exiting sensu_value: #{sensu_value}"
-     return true
-   end
+
+     if json_not_in_file == 1
+       return false
+     elsif file_hash.empty?
+       return false
+     elsif "#{@resource[:ensure]}" == 'absent'
+       return true
+     elsif sensu_value > 0
+      return false
+     else
+       #puts "I am exiting sensu_value: #{sensu_value}"
+       #puts "this is the sensu_value file: #{sensu_value}"
+       #puts "this is the sensu_value file: #{json_not_in_file}"
+       return true
+     end
+    end
   end
 
   def exists?
