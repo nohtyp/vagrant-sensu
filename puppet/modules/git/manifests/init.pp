@@ -41,6 +41,7 @@ class git {
     path    => '/bin/',
     command => 'git clone https://github.com/sensu-plugins/sensu-plugins-disk-checks.git /etc/sensu/plugins/sensu-plugins-disk-checks',
     unless => ["test -d /etc/sensu/plugins/sensu-plugins-disk-checks"]
+    require => Package['install git'],
   }
 
   package { 'install git':

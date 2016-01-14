@@ -40,10 +40,10 @@ class sensu::sensu_server::sensu_check inherits sensu {
     checks      => 'test3',
     config_file => '/etc/sensu/conf.d/test3.json',
     command     => '/etc/sensu/plugins/sensu-plugins-disk-checks/bin/check-disk-usage.rb',
-    subscribers => [ 'fake', 'foster' ],
+    subscribers => [ 'fakes', 'foster' ],
     interval    => 10,
     ttl         => 10,
-    timeout     => 30,
+    timeout     => 20,
     require     => File['/etc/sensu/conf.d/test3.json'],
   }
 }
