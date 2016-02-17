@@ -3,8 +3,6 @@
 1. [Overview](#overview)
 2. [Setup - The basics of getting started with myfirewall](#setup)
     * [Provision sensu using vagrant](#Provision sensu using vagrant)
-    * [Configure system without proper dns](#Configure system without proper dns)
-    * [Configure system with proper dns](#Configure system with proper dns (using a resolv.conf puppet module))
 3. [Limitations - OS compatibility, etc.](#limitations)
 4. [Development - Guide for contributing to the module](#development)
 
@@ -28,35 +26,11 @@ Clone the repository:
 
 git clone https://github.com/nohtyp/vagrant-sensu.git
 
-<pre>
-Note: I am not using resolv.conf so you need to add it or
-or provision the system with `--no-provision`.
-</pre>
-
-### Configure system without proper dns
-
-#### Build system without provisioning
-<pre>vagrant up test02 --no-provision</pre>
-
-#### Log into system to configure dns
-<pre>vagrant ssh test02</pre>
-
-#### Configure dns on system
-<pre>echo 'nameserver (your name server..ex 192.168.1.1)' > /etc/resolv.conf</pre>
-
-#### Exit system and provision
-<pre>exit
-vagrant provision test02
-</pre> 
-
-
-### Configure system with proper dns (using a resolv.conf puppet module)
-
-#### Build system
-<pre>vagrant up test02</pre>
+#### Provision systems
+vagrant up
 
 #### Test server is running
-<pre>http://192.168.2.201:3000</pre>
+<pre>http://192.168.2.200:3000</pre>
 
 ### Limitations
 

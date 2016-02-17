@@ -11,3 +11,14 @@ rabbitmq::vhostuser: 'sensu'
 myfirewall::myports:
     - 5672
     - 4567
+
+hosts::host_entries:
+  'test.familyguy.local':
+    ip: '192.168.2.200'
+  'test02.familyguy.local':
+    ip: '192.168.2.201'
+  'test03.familyguy.local':
+    ip: '192.168.2.203'
+
+dnsclient::nameservers:
+  - '192.168.1.1'
