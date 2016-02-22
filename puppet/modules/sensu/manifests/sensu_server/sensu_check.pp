@@ -12,6 +12,10 @@ class sensu::sensu_server::sensu_check inherits sensu {
     ensure  => present,
   }
 
+  file { '/etc/sensu/conf.d/mail.json':
+    ensure  => present,
+  }
+
   #sensu_server_checks { '/etc/sensu/conf.d/test.json':
   #  ensure      => present,
   #  checks      => 'test',
@@ -46,4 +50,19 @@ class sensu::sensu_server::sensu_check inherits sensu {
     timeout     => 20,
     require     => File['/etc/sensu/conf.d/test3.json'],
   }
+
+  sensu_server_handlers { '/etc/sensu/conf.d/mail.json':
+    ensure      => present,
+    handler     => 'mail',
+    config_file => '/etc/sensu/conf.d/mail.json',
+    type        => 'pipe',
+    command     => "mailx -s 'sensu event' next@address.com",
+    filters     => [ 'recurrence', 'production' ],
+    severities  => ["critical", "unknown"],
+    mutator     => 'only_check_output',
+    timeout     => 15,
+    pipe        => { type => "direct", name => "mail_handler" },
+    subdue      => { days => ["monday", "wednesday"] },
+    require     => File['/etc/sensu/conf.d/mail.json'],
+   }
 }
