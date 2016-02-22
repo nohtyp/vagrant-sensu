@@ -1,8 +1,8 @@
 require 'puppet/property/boolean'
 require 'puppet/type'
 
-Puppet::Type.newtype(:sensu_server_filters) do
-  @doc = 'This type will modify the sensu filters.'
+Puppet::Type.newtype(:sensu_server_mutators) do
+  @doc = 'This type will modify the sensu mutators.'
 
   ensurable do
   
@@ -29,20 +29,18 @@ Puppet::Type.newtype(:sensu_server_filters) do
  end
 
   newparam(:name, :namevar => true) do
-    desc 'This is the name of the filter'
+    desc 'This is the name of the mutator'
   end
 
   newparam(:config_file) do
-    desc 'This is the configuration file for filter'
+    desc 'This is the config_file for the mutator'
   end
 
-  newparam(:attributes) do
-    desc 'Filter attributes to be compared with Event data'
+  newparam(:command) do
+    desc 'he mutator command to be executed. The event data is passed to the process via STDIN.'
   end
 
-  newparam(:negate) do
-    desc 'If the filter will negate events that match the filter attributes.'
-
-    defaultto false
+  newparam(:timeout) do
+    desc 'The mutator execution duration timeout in seconds (hard stop).'
   end
 end

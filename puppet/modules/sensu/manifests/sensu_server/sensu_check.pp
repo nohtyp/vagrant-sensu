@@ -16,6 +16,14 @@ class sensu::sensu_server::sensu_check inherits sensu {
     ensure  => present,
   }
 
+  file { '/etc/sensu/conf.d/filters.json':
+    ensure  => present,
+  }
+
+  file { '/etc/sensu/conf.d/mutators.json':
+    ensure  => present,
+  }
+
   #sensu_server_checks { '/etc/sensu/conf.d/test.json':
   #  ensure      => present,
   #  checks      => 'test',
@@ -52,7 +60,7 @@ class sensu::sensu_server::sensu_check inherits sensu {
   }
 
   sensu_server_handlers { '/etc/sensu/conf.d/mail.json':
-    ensure      => present,
+    ensure      => absent,
     handler     => 'mail',
     config_file => '/etc/sensu/conf.d/mail.json',
     type        => 'pipe',
@@ -65,4 +73,22 @@ class sensu::sensu_server::sensu_check inherits sensu {
     subdue      => { days => ["monday", "wednesday"] },
     require     => File['/etc/sensu/conf.d/mail.json'],
    }
+
+  sensu_server_filters { '/etc/sensu/conf.d/filters.json':
+    ensure      => absent,
+    name        => 'myfilters',
+    config_file => '/etc/sensu/conf.d/filters.json',
+    negate      => false,
+    attributes  => { check => { team => "ops" }},
+    require     => File['/etc/sensu/conf.d/filters.json'],
+  }
+
+  sensu_server_mutators { '/etc/sensu/conf.d/mutators.json':
+    ensure      => absent,
+    name        => 'mymutates',
+    config_file => '/etc/sensu/conf.d/mutators.json',
+    command     => '/etc/sensu/plugins/mutated.rb',
+    timeout     => 20,
+    require     => File['/etc/sensu/conf.d/mutators.json'],
+  }
 }
