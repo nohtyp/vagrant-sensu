@@ -38,33 +38,14 @@ Puppet::Type.type(:sensu_server_handlers).provide(:handlers) do
    new_hash = {}
    info("checking if #{@resource[:config_file]} needs contents modified")
    myjson_hash = check_params
-   if myjson_hash['handlers'].is_a?(Array) || myjson_hash['filters'].is_a?(Array) || myjson_hash['severities'].is_a?(Array)
-     myjson_hash['handlers'] = @resource[:handlers] unless @resource[:handlers].nil?
-     myjson_hash['filters'] = @resource[:filters] unless @resource[:filters].nil?
-     myjson_hash['severities'] = @resource[:severities] unless @resource[:severities].nil?
-     sensu_client_hash["#{@resource[:handler]}"] = myjson_hash
-     new_hash['handlers'] = sensu_client_hash
-     #warn("This is myjson_hash: #{myjson_hash}")
-     #warn("This is sensu_client_hash: #{sensu_client_hash}")
-     #warn("This is new_hash: #{new_hash}")
-     myfile = File.open(@resource[:config_file], "w")
-     myfile.write(JSON.pretty_generate new_hash)
-     myfile.close
-   else
-     myjson_hash['subscribers'] = @resource[:subscribers] unless @resource[:handlers].nil?
-     myjson_hash['handlers'] = @resource[:handlers] unless @resource[:handlers].nil?
-     myjson_hash['filters'] = @resource[:filters] unless @resource[:filters].nil?
-     myjson_hash['severities'] = @resource[:severities] unless @resource[:severities].nil?
-     sensu_client_hash["#{@resource[:handler]}"] = myjson_hash
-     new_hash['handlers'] = sensu_client_hash
-     #warn("This is myjson_hash #2: #{myjson_hash}")
-     #warn("This is sensu_client_hash #2: #{sensu_client_hash}")
-     #warn("This is new_hash #2: #{new_hash}")
-     myfile = File.open(@resource[:config_file], "w")
-     myfile.write(JSON.pretty_generate new_hash)
-     myfile.close
-   end
-     
+   sensu_client_hash["#{@resource[:handler]}"] = myjson_hash
+   new_hash['handlers'] = sensu_client_hash
+   #warn("This is myjson_hash #2: #{myjson_hash}")
+   #warn("This is sensu_client_hash #2: #{sensu_client_hash}")
+   #warn("This is new_hash #2: #{new_hash}")
+   myfile = File.open(@resource[:config_file], "w")
+   myfile.write(JSON.pretty_generate new_hash)
+   myfile.close
   end
 
   def destroy

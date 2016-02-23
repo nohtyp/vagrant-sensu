@@ -17,7 +17,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
     end
 
     check_hash['command'] = @resource[:command] unless @resource[:command].nil?
-    check_hash['subscribers'] = @resource[:subscribers] unless @resource[:command].nil?
+    check_hash['subscribers'] = @resource[:subscribers] unless @resource[:subscribers].nil?
     check_hash['interval'] = @resource[:interval].to_i unless @resource[:interval].nil?
     check_hash['type'] = @resource[:type] unless @resource[:type].nil?
     check_hash['extension'] = @resource[:extension] unless @resource[:extension].nil?
@@ -42,28 +42,14 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
    new_hash = {}
    info("checking if #{@resource[:config_file]} needs contents modified")
    myjson_hash = check_params
-   if myjson_hash['subscribers'].is_a?(Array)
-     myjson_hash['handlers'] = [@resource[:handlers]] unless @resource[:handlers].nil?
-     sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
-     new_hash['checks'] = sensu_client_hash
-     #warn("This is myjson_hash: #{myjson_hash}")
-     #warn("This is sensu_client_hash: #{sensu_client_hash}")
-     #warn("This is new_hash: #{new_hash}")
-     myfile = File.open(@resource[:config_file], "w")
-     myfile.write(JSON.pretty_generate new_hash)
-     myfile.close
-   else
-     myjson_hash['subscribers'] = [@resource[:subscribers]] unless @resource[:handlers].nil?
-     myjson_hash['handlers'] = [@resource[:handlers]] unless @resource[:handlers].nil?
-     sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
-     new_hash['checks'] = sensu_client_hash
-     #warn("This is myjson_hash #2: #{myjson_hash}")
-     #warn("This is sensu_client_hash #2: #{sensu_client_hash}")
-     warn("This is new_hash #2: #{new_hash}")
-     myfile = File.open(@resource[:config_file], "w")
-     myfile.write(JSON.pretty_generate new_hash)
-     myfile.close
-   end
+   sensu_client_hash["#{@resource[:checks]}"] = myjson_hash
+   new_hash['checks'] = sensu_client_hash
+   #warn("This is myjson_hash #2: #{myjson_hash}")
+   #warn("This is sensu_client_hash #2: #{sensu_client_hash}")
+   #warn("This is new_hash #2: #{new_hash}")
+   myfile = File.open(@resource[:config_file], "w")
+   myfile.write(JSON.pretty_generate new_hash)
+   myfile.close
      
   end
 
