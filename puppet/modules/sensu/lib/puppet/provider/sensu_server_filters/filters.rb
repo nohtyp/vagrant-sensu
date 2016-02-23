@@ -9,19 +9,6 @@ Puppet::Type.type(:sensu_server_filters).provide(:filters) do
   confine :osfamily => [:RedHat, :Debian]
   defaultfor :operatingsystem => :RedHat
 
-  def check_values
-    myvalues = {}
-
-    if @resource[:config_file].nil? && @resource[:name].nil? && @resource[:attributes].nil?
-      fail('A config file, attributes, and filter name are required')
-    end
-
-    myvalues['negate'] = @resource[:negate] unless @resource[:negate].nil?
-    myvalues['attributes'] = @resource[:attributes] unless @resource[:attributes].nil?
-
-   myvalues 
-  end
-
   def check_params
     check_hash = {}
 
@@ -56,7 +43,7 @@ Puppet::Type.type(:sensu_server_filters).provide(:filters) do
   end
 
   def check
-    myhash = check_values
+    myhash = check_params
     json_not_in_file = 0
     opened_file = File.read("#{@resource[:config_file]}")
     begin

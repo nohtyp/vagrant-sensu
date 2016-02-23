@@ -9,19 +9,6 @@ Puppet::Type.type(:sensu_server_mutators).provide(:mutators) do
   confine :osfamily => [:RedHat, :Debian]
   defaultfor :operatingsystem => :RedHat
 
-  def check_values
-    myvalues = {}
-
-    if @resource[:config_file].nil? && @resource[:name].nil? && @resource[:command].nil?
-      fail('A config file, command, and name are required')
-    end
-
-    myvalues['command'] = @resource[:command] unless @resource[:command].nil?
-    myvalues['timeout'] = @resource[:timeout].to_i unless @resource[:timeout].nil?
-
-   myvalues 
-  end
-
   def check_params
     check_hash = {}
 
@@ -56,7 +43,7 @@ Puppet::Type.type(:sensu_server_mutators).provide(:mutators) do
   end
 
   def check
-    myhash = check_values
+    myhash = check_params
     json_not_in_file = 0
     opened_file = File.read("#{@resource[:config_file]}")
     begin

@@ -9,30 +9,6 @@ Puppet::Type.type(:sensu_server_handlers).provide(:handlers) do
   confine :osfamily => [:RedHat, :Debian]
   defaultfor :operatingsystem => :RedHat
 
-  def check_values
-    myvalues = {}
-
-    if @resource[:config_file].nil? && @resource[:command].nil? && @resource[:handler] && @resource[:type].nil?
-      fail('A config file, command, handler, and type are required')
-    end
-
-    myvalues['type'] = @resource[:type] unless @resource[:type].nil?
-    #myvalues['handler'] = @resource[:handler] unless @resource[:handler].nil?
-    myvalues['filter'] = @resource[:filter] unless @resource[:filter].nil?
-    myvalues['filters'] = @resource[:filters] unless @resource[:filters].nil?
-    myvalues['severities'] = @resource[:severities] unless @resource[:severities].nil?
-    myvalues['mutator'] = @resource[:mutator] unless @resource[:mutator].nil?
-    myvalues['timeout'] = @resource[:timeout].to_i unless @resource[:timeout].nil?
-    myvalues['handle_flapping'] = @resource[:handle_flapping] unless @resource[:handle_flapping].nil?
-    myvalues['subdue'] = @resource[:subdue] unless @resource[:subdue].nil?
-    myvalues['command'] = @resource[:command] unless @resource[:command].nil?
-    myvalues['socket'] = @resource[:socket] unless @resource[:socket].nil?
-    myvalues['pipe'] = @resource[:pipe] unless @resource[:pipe].nil?
-    myvalues['handlers'] = @resource[:handlers] unless @resource[:handlers].nil?
-
-   myvalues 
-  end
-
   def check_params
     check_hash = {}
 
@@ -99,7 +75,7 @@ Puppet::Type.type(:sensu_server_handlers).provide(:handlers) do
   end
 
   def check
-    myhash = check_values
+    myhash = check_params
     json_not_in_file = 0
     opened_file = File.read("#{@resource[:config_file]}")
     begin

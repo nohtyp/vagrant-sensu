@@ -9,34 +9,6 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
   confine :osfamily => [:RedHat, :Debian]
   defaultfor :operatingsystem => :RedHat
 
-  def check_values
-    myvalues = {}
-
-    if @resource[:checks].nil? && @resource[:command].nil? && @resource[:subscribers] && @resource[:interval].nil? && @resource[:config_file].nil?
-      fail('A check, command, list of subscriptions, interval and configuration file are required')
-    end
-
-    myvalues['command'] = @resource[:command] unless @resource[:command].nil?
-    myvalues['subscribers'] = @resource[:subscribers] unless @resource[:command].nil?
-    myvalues['interval'] = @resource[:interval].to_i unless @resource[:interval].nil?
-    myvalues['type'] = @resource[:type] unless @resource[:type].nil?
-    myvalues['extension'] = @resource[:extension] unless @resource[:extension].nil?
-    myvalues['standalone'] = @resource[:standalone] unless @resource[:standalone].nil?
-    myvalues['publish'] = @resource[:publish] unless @resource[:publish].nil?
-    myvalues['timeout'] = @resource[:timeout].to_i unless @resource[:timeout].nil?
-    myvalues['ttl'] = @resource[:ttl].to_i unless @resource[:ttl].nil?
-    myvalues['handle'] = @resource[:handle] unless @resource[:handle].nil?
-    myvalues['handler'] = @resource[:handler] unless @resource[:handler].nil?
-    myvalues['low_flap_threshold'] = @resource[:low_flap_threshold].to_i unless @resource[:low_flap_threshold].nil?
-    myvalues['high_flap_threshold'] = @resource[:high_flap_threshold].to_i unless @resource[:high_flap_threshold].nil?
-    myvalues['source'] = @resource[:source] unless @resource[:source].nil?
-    myvalues['aggregate'] = @resource[:aggregate] unless @resource[:aggregate].nil?
-    myvalues['handlers'] = @resource[:handlers] unless @resource[:handlers].nil?
-    #myvalues['subdue'] = @resource[:subdue] unless @resource[:subdue].nil?
-
-   myvalues 
-  end
-
   def check_params
     check_hash = {}
 
@@ -103,7 +75,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
   end
 
   def check
-    myhash = check_values
+    myhash = check_params
     json_not_in_file = 0
     opened_file = File.read("#{@resource[:config_file]}")
     begin
