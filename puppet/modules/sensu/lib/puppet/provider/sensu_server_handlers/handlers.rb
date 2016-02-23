@@ -17,7 +17,6 @@ Puppet::Type.type(:sensu_server_handlers).provide(:handlers) do
     end
 
     check_hash['type'] = @resource[:type] unless @resource[:type].nil?
-    #check_hash['handler'] = @resource[:handler] unless @resource[:handler].nil?
     check_hash['filter'] = @resource[:filter] unless @resource[:filter].nil?
     check_hash['filters'] = @resource[:filters] unless @resource[:filters].nil?
     check_hash['severities'] = @resource[:severities] unless @resource[:severities].nil?

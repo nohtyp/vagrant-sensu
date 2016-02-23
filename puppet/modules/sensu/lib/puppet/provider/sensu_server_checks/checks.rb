@@ -32,7 +32,7 @@ Puppet::Type.type(:sensu_server_checks).provide(:checks) do
     check_hash['source'] = @resource[:source] unless @resource[:source].nil?
     check_hash['aggregate'] = @resource[:aggregate] unless @resource[:aggregate].nil?
     check_hash['handlers'] = @resource[:handlers] unless @resource[:handlers].nil?
-    #check_hash['subdue'] = @resource[:subdue] unless @resource[:subdue].nil?
+    check_hash['subdue'] = @resource[:subdue] unless @resource[:subdue].nil?
 
     check_hash
   end
