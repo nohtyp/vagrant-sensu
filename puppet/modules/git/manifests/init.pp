@@ -35,17 +35,14 @@
 #
 # Copyright 2016 Your name here, unless otherwise noted.
 #
-class git {
+class git ( 
 
-  exec { 'Download module':
-    path    => '/bin/',
-    command => 'git clone https://github.com/sensu-plugins/sensu-plugins-disk-checks.git /etc/sensu/plugins/sensu-plugins-disk-checks',
-    unless => ["test -d /etc/sensu/plugins/sensu-plugins-disk-checks"],
-    require => Package['install git'],
-  }
+$sensu_git     = $git::params::sensu_git,
 
-  package { 'install git':
-    ensure => present,
-    name   => 'git',
-  }
+) inherits git::params {
+
+  anchor {'git::begin': } ->
+   class {'::git::install':} ->
+   class {'::git::gitclone':}
+  anchor {'git::end':}
 }
