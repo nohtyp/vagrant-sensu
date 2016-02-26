@@ -16,8 +16,8 @@ Puppet::Type.type(:sensu_server_filters).provide(:filters) do
       fail('A config file, attributes, and filter name are required')
     end
 
-    check_hash['negate'] = @resource[:negate] unless @resource[:negate].nil?
     check_hash['attributes'] = @resource[:attributes] unless @resource[:attributes].nil?
+    check_hash['negate'] = @resource[:negate] unless @resource[:negate].nil?
 
     check_hash
   end

@@ -28,7 +28,7 @@ Puppet::Type.type(:sensu_server_mutators).provide(:mutators) do
    info("checking if #{@resource[:config_file]} needs contents modified")
    myjson_hash = check_params
    sensu_client_hash["#{@resource[:name]}"] = myjson_hash
-   new_hash['filters'] = sensu_client_hash
+   new_hash['mutators'] = sensu_client_hash
    myfile = File.open(@resource[:config_file], "w")
    myfile.write(JSON.pretty_generate new_hash)
    myfile.close
@@ -57,16 +57,16 @@ Puppet::Type.type(:sensu_server_mutators).provide(:mutators) do
     sensu_value = 0
     myhash.each do | k, v |
       #puts "key: #{k} value: #{v}...value class: #{v.class}"
-      if file_hash["filters"][@resource[:name]]["#{k}"].is_a?(String)
-        if "#{file_hash["filters"][@resource[:name]]["#{k}"]}" == "#{v}"
+      if file_hash["mutators"][@resource[:name]]["#{k}"].is_a?(String)
+        if "#{file_hash["mutators"][@resource[:name]]["#{k}"]}" == "#{v}"
           debug("#{k} is a String!")
         else
           debug("Reached the end of the Mutators String checks!")
           #puts "first value:#{file_hash["checks"][@resource[:checks]]["#{k}"]}..value:#{v}"
           sensu_value += 1
         end
-      elsif file_hash["filters"][@resource[:name]]["#{k}"].is_a?(Fixnum)
-        if "#{file_hash["filters"][@resource[:name]]["#{k}"]}" == "#{v}"
+      elsif file_hash["mutators"][@resource[:name]]["#{k}"].is_a?(Fixnum)
+        if "#{file_hash["mutators"][@resource[:name]]["#{k}"]}" == "#{v}"
           debug("#{k} is a Fixnum!")
         else
           debug("Reached the end of the Mutators Fixnum checks!")

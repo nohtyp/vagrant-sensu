@@ -60,7 +60,7 @@ class sensu::sensu_server::sensu_check inherits sensu {
   }
 
   sensu_server_handlers { '/etc/sensu/conf.d/mail.json':
-    ensure      => absent,
+    ensure      => present,
     handler     => 'mail',
     config_file => '/etc/sensu/conf.d/mail.json',
     type        => 'pipe',
@@ -75,16 +75,16 @@ class sensu::sensu_server::sensu_check inherits sensu {
    }
 
   sensu_server_filters { '/etc/sensu/conf.d/filters.json':
-    ensure      => absent,
+    ensure      => present,
     name        => 'myfilters',
     config_file => '/etc/sensu/conf.d/filters.json',
-    negate      => false,
     attributes  => { check => { team => "ops" }},
+    negate      => false,
     require     => File['/etc/sensu/conf.d/filters.json'],
   }
 
   sensu_server_mutators { '/etc/sensu/conf.d/mutators.json':
-    ensure      => absent,
+    ensure      => present,
     name        => 'mymutates',
     config_file => '/etc/sensu/conf.d/mutators.json',
     command     => '/etc/sensu/plugins/mutated.rb',
