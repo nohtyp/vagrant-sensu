@@ -1,7 +1,7 @@
 class git::gitclone inherits git {
 
 git_clone { "repo_list":
-    ensure      => absent,
+    ensure      => present,
     baseurl     => 'https://github.com/sensu-plugins',
     repo        => $sensu_git,
     destination => '/etc/sensu/plugins',
