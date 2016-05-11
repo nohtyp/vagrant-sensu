@@ -36,15 +36,22 @@
 # Copyright 2015 Your name here, unless otherwise noted.
 #
 class redis (
-
-$redis_package       = $redis::params::redis_package,
-$redis_service       = $redis::params::redis_service,
-
+$redis_pkgs                 = $redis::params::redis_pkgs,
+$redis_config               = $redis::params::redis_config,
+$redis_config_path          = $redis::params::redis_config_path,
+$redis_service              = $redis::params::redis_service,
+$redis_sentinel_config      = $redis::params::redis_sentinel_config,
+$redis_sentinel_config_path = $redis::params::redis_sentinel_config_path,
+$redis_sentinel_service     = $redis::params::redis_sentinel_service,
+$use_hiera                  = $redis::params::use_hiera,
 ) inherits redis::params {
 
 anchor {'redis::begin': } ->
- class {'::redis::install':} ->
- #class {'::redis::config':} ->
- class {'::redis::service':} ->
+  class {'::redis::redis::install':} ->
+  class {'::redis::redis::redis_config':} ->
+  class {'::redis::sentinel::redis_sentinel_config':} ->
+  class {'::redis::redis::redis_service':} ->
+  class {'::redis::sentinel::redis_sentinel_service':}
 anchor {'redis::end':}
+
 }
