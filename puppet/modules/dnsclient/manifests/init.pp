@@ -4,8 +4,7 @@
 # common class that applies to all systems.
 #
 class dnsclient                 (
-  $nameservers                 = [ '8.8.8.8',
-                                  '8.8.4.4' ],
+  $nameservers                 = [ '192.168.1.1'],
   $options                     = [ 'rotate',
                                   'timeout:1'],
   $search                      = ['UNSET'],

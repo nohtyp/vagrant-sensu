@@ -41,11 +41,11 @@ ssh::client_options:
           HashKnownHosts: 'yes'
           SendEnv: 'LANG LC_*'
 
-resolv_conf::nameservers:
-        - '10.40.57.39'
+dnsclient::nameservers:
+        - '192.168.1.1'
 
 resolv_conf::searchpath:
-        - 'hq.nesdis.noaa.doc'
+        - 'familyguy.local'
 
 sudo::configs:
         'admins':
