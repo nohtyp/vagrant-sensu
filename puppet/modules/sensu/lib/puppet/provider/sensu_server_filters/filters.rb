@@ -56,13 +56,13 @@ Puppet::Type.type(:sensu_server_filters).provide(:filters) do
    if json_not_in_file == 0
     sensu_value = 0
     myhash.each do | k, v |
-      puts "key: #{k} value: #{v}...value class: #{v.class}"
+      #puts "key: #{k} value: #{v}...value class: #{v.class}"
       if file_hash["filters"][@resource[:name]]["#{k}"].is_a?(String)
         if "#{file_hash["filters"][@resource[:name]]["#{k}"]}" == "#{v}"
           debug("#{k} is a String!")
         else
           debug("Reached the end of the Filters String checks!")
-          puts "first value:#{file_hash["checks"][@resource[:checks]]["#{k}"]}..value:#{v}"
+          #puts "first value:#{file_hash["checks"][@resource[:checks]]["#{k}"]}..value:#{v}"
           sensu_value += 1
         end
       elsif file_hash["filters"][@resource[:name]]["#{k}"].is_a?(Hash)
