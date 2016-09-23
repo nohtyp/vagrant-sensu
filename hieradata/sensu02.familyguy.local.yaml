@@ -9,16 +9,32 @@ rabbitmq::vhostuser: 'sensu'
 #    - rule family="ipv4" source address="192.168.10.0/24" port port="3051" protocol="tcp" accept
 
 myfirewall::myports:
+    - 3000
     - 5672
-    - 4567
+    - 4567 
+    - 4369
+    - 25672
+
+
+sensu::uchiwa_server: true
 
 hosts::host_entries:
-  'test.familyguy.local':
+  'sensu01.familyguy.local':
     ip: '192.168.2.200'
-  'test02.familyguy.local':
+    host_aliases:
+      - 'sensu01'
+  'sensuclient01.familyguy.local':
     ip: '192.168.2.201'
-  'test03.familyguy.local':
+    host_aliases:
+      - 'sensuclient01'
+  'sensu02.familyguy.local':
     ip: '192.168.2.203'
+    host_aliases:
+      - 'sensu02'
+  'sensu.familyguy.local':
+    ip: '192.168.2.199'
+    host_aliases:
+      - 'sensu'
 
 dnsclient::nameservers:
   - '192.168.1.1'

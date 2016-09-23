@@ -1,0 +1,54 @@
+#This file is used to build the haproxy file for automating the proxy for HA for Sensu
+
+
+listen SensuAPI *:4567
+  mode http
+  balance source
+  rspadd Access-Control-Allow-Origin:\ *
+  rspadd Access-Control-Allow-Headers:\ origin,\ x-requested-with,\ content-type
+  rspadd Access-Control-Allow-Methods:\ PUT,\ GET,\ POST,\ DELETE,\ OPTIONS
+ 
+  server sensu01.familyguy.local 192.168.2.200:4567 check port 4567 inter 2000
+  server sensu02.familyguy.local 192.168.2.203:4567 check port 4567 inter 2000 backup
+
+listen SensuUchiwa *:3000
+  mode http
+  balance source
+  rspadd Access-Control-Allow-Origin:\ *
+  rspadd Access-Control-Allow-Headers:\ origin,\ x-requested-with,\ content-type
+  rspadd Access-Control-Allow-Methods:\ PUT,\ GET,\ POST,\ DELETE,\ OPTIONS
+ 
+  server sensu01.familyguy.local 192.168.2.200:3000 check port 3000 inter 2000
+  server sensu02.familyguy.local 192.168.2.203:3000 check port 3000 inter 2000 backup
+
+
+listen SensuRedis *:6379
+  mode tcp
+  no option checkcache
+  #option httpchk GET /
+  option log-health-checks
+  option tcplog
+  #timeout connect 10s
+  #timeout queue 5s
+  #timeout server 3600s
+  balance source
+ 
+  server sensu01.familyguy.local 192.168.2.200:6379 check port 6379 inter 2000
+  server sensu02.familyguy.local 192.168.2.203:6379 check port 6379 inter 2000 backup
+
+listen SensuRabbitMQ_epmd *:4369
+ mode tcp
+ balance source
+ option tcplog
+
+ server sensu01.familyguy.local 192.168.2.200:4369 check inter 5000
+ server sensu02.familyguy.local 192.168.2.203:4369 check inter 5000 backup
+
+listen SensuRabbitMQ *:5672
+ mode tcp
+ balance source
+ option tcplog
+
+ server sensu01.familyguy.local 192.168.2.200:5672 check inter 5000
+ server sensu02.familyguy.local 192.168.2.203:5672 check inter 5000 backup
+

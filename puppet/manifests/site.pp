@@ -1,9 +1,12 @@
-node 'test.familyguy.local' { 
+node 'sensu.familyguy.local' { 
+  class {'role::myproxy':}
+}
+node 'sensu01.familyguy.local' { 
   class {'role::sensu_server':}
 }
-node 'test02.familyguy.local' { 
+node 'sensuclient01.familyguy.local' { 
   class {'role::sensu_client':}
 }
-node 'test03.familyguy.local' { 
+node 'sensu02.familyguy.local' { 
   class {'role::sensu_server':}
 }

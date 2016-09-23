@@ -71,6 +71,14 @@ class rabbitmq(
   $read_perms                 = $rabbitmq::params::read_perms,
   $write_perms                = $rabbitmq::params::write_perms,
   $vhostuser                  = $rabbitmq::params::vhostuser,
+  $queue_name                 = $rabbitmq::params::queue_name,
+  $queue_user                 = $rabbitmq::params::queue_user,
+  $queue_passwd               = $rabbitmq::params::queue_passwd,
+  $queue_durable              = $rabbitmq::params::queue_durable,
+  $queue_autodel              = $rabbitmq::params::queue_autodel,
+  $queue_args                 = $rabbitmq::params::queue_args,
+  $queue_ensure               = $rabbitmq::params::queue_ensure,
+
 ) inherits rabbitmq::params {
 
   validate_bool($admin_enable)
@@ -185,6 +193,8 @@ class rabbitmq(
   include '::rabbitmq::install'
   include '::rabbitmq::config'
   include '::rabbitmq::service'
+  include '::rabbitmq::exchanges'
+  include '::rabbitmq::queue'
   include '::rabbitmq::management'
 
   if $manage_repos != undef {
@@ -258,7 +268,8 @@ class rabbitmq(
 
   Anchor['rabbitmq::begin'] -> Class['::rabbitmq::install']
     -> Class['::rabbitmq::config'] ~> Class['::rabbitmq::service'] 
-    -> Class['::rabbitmq::management'] -> Anchor['rabbitmq::end']
+    -> Class['::rabbitmq::management'] -> Class['::rabbitmq::exchanges'] 
+    -> Class['::rabbitmq::queue'] -> Anchor['rabbitmq::end']
 
   # Make sure the various providers have their requirements in place.
   Class['::rabbitmq::install'] -> Rabbitmq_plugin<| |>

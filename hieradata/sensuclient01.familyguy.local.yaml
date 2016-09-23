@@ -7,12 +7,14 @@ rabbitmq::vhostuser: 'sensu'
 sensu::sensu_client: true
 
 hosts::host_entries:
-  'test.familyguy.local':
+  'sensu01.familyguy.local':
     ip: '192.168.2.200'
-  'test02.familyguy.local':
+  'sensuclient01.familyguy.local':
     ip: '192.168.2.201'
-  'test03.familyguy.local':
+  'sensu02.familyguy.local':
     ip: '192.168.2.203'
+  'sensu.familyguy.local':
+    ip: '192.168.2.199'
 
 dnsclient::nameservers:
   - '192.168.1.1'

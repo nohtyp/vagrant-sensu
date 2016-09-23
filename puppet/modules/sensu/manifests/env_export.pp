@@ -10,7 +10,7 @@ class sensu::env_export inherits sensu {
   exec { 'Gem installs':
    path        => ['/opt/sensu/embedded/bin/'],
    command     => "gem install $gempackages",
-   unless      => "/opt/sensu/embedded/bin/gem list $gempackages",
+   #unless      => ['test -f ",
  }
 
 }

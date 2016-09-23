@@ -78,17 +78,17 @@ class rabbitmq::params {
   $service_manage             = true
   #config
   $cluster_node_type          = 'disc'
-  $cluster_nodes              = []
+  $cluster_nodes              = ['sensu01', 'sensu02']
   $config                     = 'rabbitmq/rabbitmq.config.erb'
-  $config_cluster             = false
+  $config_cluster             = true
   $config_path                = '/etc/rabbitmq/rabbitmq.config'
   $config_stomp               = false
-  $default_user               = 'guest'
-  $default_pass               = 'guest'
-  $delete_guest_user          = false
+  $default_user               = 'sensu'
+  $default_pass               = 'sensu'
+  $delete_guest_user          = true
   $env_config                 = 'rabbitmq/rabbitmq-env.conf.erb'
   $env_config_path            = '/etc/rabbitmq/rabbitmq-env.conf'
-  $erlang_cookie              = undef
+  $erlang_cookie              = 'sensu_cluster_chat'
   $interface                  = 'UNSET'
   $node_ip_address            = 'UNSET'
   $port                       = '5672'
@@ -117,15 +117,30 @@ class rabbitmq::params {
   $ldap_config_variables      = {}
   $stomp_port                 = '6163'
   $stomp_ssl_only             = false
-  $wipe_db_on_cookie_change   = false
+  $wipe_db_on_cookie_change   = true
   $cluster_partition_handling = 'ignore'
   $environment_variables      = {}
   $config_variables           = {}
   $config_kernel_variables    = {}
   $file_limit                 = '16384'
-  $myvhost                    = undef
-  $vhostuser                  = undef
+  $myvhost                    = '/sensu'
+  $vhostuser                  = 'sensu'
   $config_perms               = '.*'
   $read_perms                 = '.*'
   $write_perms                = '.*'
+  $queue_name                 = 'sensu@/sensu'
+  $queue_user                 = 'sensu'
+  $queue_passwd               = 'sensu'
+  $queue_durable              = true
+  $queue_autodel              = false
+  $queue_ensure               = present
+  $exchange_name              = "/sensu@sensu"
+  $exchange_user              = 'sensu'
+  $exchange_passwd            = 'sensu'
+  $exchange_durable           = true
+  $exchange_autodel           = false
+  $exchange_args              = { x-message-ttl => 123, x-dead-letter-exchange => 'other'}
+  $exchange_ensure            = present
+  $exchange_type              = 'fanout'
+  $exchange_internal          = true
 }
