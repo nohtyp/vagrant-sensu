@@ -1,5 +1,6 @@
 #This file is used to build the haproxy file for automating the proxy for HA for Sensu
-
+#Currently the file is not an erb template and is just copying the files to the /etc/haproxy/haproxy.cfg
+#file.  I will update the module to retrofit erb template.
 
 listen SensuAPI *:4567
   mode http

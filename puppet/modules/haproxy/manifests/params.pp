@@ -1,0 +1,2 @@
+class haproxy::params {
+}
