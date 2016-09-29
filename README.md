@@ -30,7 +30,7 @@ git clone https://github.com/nohtyp/vagrant-sensu.git
 vagrant up
 
 #### Test server is running
-<pre>http://192.168.2.200:3000</pre>
+<pre>http://192.168.2.199:3000</pre>
 
 ### Limitations
 
