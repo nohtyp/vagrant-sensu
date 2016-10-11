@@ -10,3 +10,6 @@ node 'sensuclient01.familyguy.local' {
 node 'sensu02.familyguy.local' { 
   class {'role::sensu_server':}
 }
+node 'test.familyguy.local' { 
+  class {'role::mywiki':}
+}

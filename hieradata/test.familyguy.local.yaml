@@ -1,0 +1,11 @@
+---
+sudo::configs:
+    'redmine':
+        'content'   : '%redmine ALL=(ALL) NOPASSWD: /bin/yum *, /bin/gem *, /usr/local/bin/bundler *' 
+        'priority'  : 10
+    'vagrant':
+        'content'   : 'vagrant ALL=(ALL) NOPASSWD: ALL'
+   
+
+dnsclient::nameservers:
+  - '192.168.1.1'

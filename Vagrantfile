@@ -7,10 +7,11 @@ VAGRANT_TMP_NAME = "centos7_min"
 VBGUI = false
 
 nodes = [
-  { :hostname => 'sensu',   :ip => '192.168.2.199', :box => 'jkyle/centos-7.0-x86_64' },
-  { :hostname => 'sensu01',   :ip => '192.168.2.200', :box => 'jkyle/centos-7.0-x86_64' },
-  { :hostname => 'sensuclient01', :ip => '192.168.2.201', :box => 'jkyle/centos-7.0-x86_64' },
-  { :hostname => 'sensu02', :ip => '192.168.2.203', :box => 'jkyle/centos-7.0-x86_64' },
+  #{ :hostname => 'sensu',   :ip => '192.168.2.199', :box => 'jkyle/centos-7.0-x86_64' },
+  #{ :hostname => 'sensu01',   :ip => '192.168.2.200', :box => 'jkyle/centos-7.0-x86_64' },
+  #{ :hostname => 'sensuclient01', :ip => '192.168.2.201', :box => 'jkyle/centos-7.0-x86_64' },
+  #{ :hostname => 'sensu02', :ip => '192.168.2.203', :box => 'jkyle/centos-7.0-x86_64' },
+  { :hostname => 'test', :ip => '192.168.2.223', :box => 'jkyle/centos-7.0-x86_64' },
 ]
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
