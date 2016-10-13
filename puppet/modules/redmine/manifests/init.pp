@@ -53,17 +53,25 @@ $redmine_encoding      = $redmine::params::redmine_encoding,
 ) inherits params {
 
 anchor {'redmin::begin': } 
-  class {'::redmine::users':} ->
   class {'::redmine::install':} ->
-  class {'::redmine::gems':} ->
+  class {'::redmine::database::initialize':} ->
+  class {'::redmine::database::service':} ->
+  class {'::redmine::database::users':} ->
+  class {'::redmine::database::database':} ->
+  class {'::redmine::users':} ->
   class {'::redmine::download':} ->
   class {'::redmine::untar':} ->
   class {'::redmine::config':} ->
+  class {'::redmine::gems':} ->
   class {'::redmine::bundler':} ->
   class {'::redmine::redmine_token':} ->
-  class {'::redmine::db_install':} ->
-  class {'::redmine::db_initialize':} ->
-  class {'::redmine::db_service':} ->
-  class {'::redmine::redmine_migrate':}
+  class {'::redmine::redmine_migrate':} ->
+  class {'::redmine::redmine_link':} ->
+  class {'::redmine::openssl::create_certificate':} ->
+  class {'::redmine::web::httpconf':} ->
+  class {'::redmine::web::passenger':} ->
+  class {'::redmine::web::passengersvc':} ->
+  class {'::redmine::web::service':} ->
+  class {'::redmine::temp':}
 anchor {'redmine::end':}
 }

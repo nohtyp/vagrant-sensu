@@ -1,6 +1,6 @@
-# == Class: postgresql
+# == Class: mystages
 #
-# Full description of class postgresql here.
+# Full description of class mystages here.
 #
 # === Parameters
 #
@@ -23,7 +23,7 @@
 #
 # === Examples
 #
-#  class { postgresql:
+#  class { mystages:
 #    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
 #  }
 #
@@ -35,16 +35,33 @@
 #
 # Copyright 2016 Your name here, unless otherwise noted.
 #
-class postgresql (
+class mystages {
+  stage { 'zero'  :
+    before => Stage['main'],
+  }
 
+  stage { 'first' :
+    require => Stage['main'],
+  }
 
-) inherits params {
+  stage { 'second' :
+    require => Stage['first'],
+  }
 
-anchor {'postgresql::begin': } 
-  class {'::postgresql::install':} ->
-  class {'::postgresql::initialize':} ->
-  class {'::postgresql::service':} ->
-  class {'::postgresql::users':} ->
-  class {'::postgresql::database':} 
-anchor {'postgresql::end':}
+  stage { 'third' :
+    require => Stage['second'],
+  }
+
+  stage { 'fourth' :
+    require => Stage['third'],
+  }
+
+  stage { 'fifth' :
+    require => Stage['fourth'],
+  }
+
+  stage { 'sixth' :
+    require => Stage['fifth'],
+  }
+
 }

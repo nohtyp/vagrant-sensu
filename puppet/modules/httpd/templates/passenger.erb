@@ -1,0 +1,16 @@
+LoadModule passenger_module /usr/local/share/gems/gems/passenger-5.0.30/buildout/apache2/mod_passenger.so
+#   <IfModule mod_passenger.c>
+PassengerRoot /usr/local/share/gems/gems/passenger-5.0.30
+PassengerDefaultRuby /usr/bin/ruby
+#   </IfModule>
+
+
+# Deploying a Ruby on Rails application: an example
+
+# Suppose you have a Rails application in /somewhere. Add a virtual host to
+# your Apache configuration file and set its DocumentRoot to /somewhere/public:
+#
+    <VirtualHost *:80>
+       ServerName test.familyguy.local
+       DocumentRoot /opt/redmine/public
+    </VirtualHost>

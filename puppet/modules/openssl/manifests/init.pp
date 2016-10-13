@@ -1,6 +1,6 @@
-# == Class: postgresql
+# == Class: openssl
 #
-# Full description of class postgresql here.
+# Full description of class openssl here.
 #
 # === Parameters
 #
@@ -23,7 +23,7 @@
 #
 # === Examples
 #
-#  class { postgresql:
+#  class { openssl:
 #    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
 #  }
 #
@@ -35,16 +35,12 @@
 #
 # Copyright 2016 Your name here, unless otherwise noted.
 #
-class postgresql (
+class openssl (
 
 
 ) inherits params {
 
-anchor {'postgresql::begin': } 
-  class {'::postgresql::install':} ->
-  class {'::postgresql::initialize':} ->
-  class {'::postgresql::service':} ->
-  class {'::postgresql::users':} ->
-  class {'::postgresql::database':} 
-anchor {'postgresql::end':}
+anchor {'openssl::begin': } 
+  class {'::openssl::create_certificate':}
+anchor {'openssl::end':}
 }

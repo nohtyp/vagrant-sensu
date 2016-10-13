@@ -9,8 +9,24 @@ class redmine::config inherits params {
   file { 'Changing ownership on redmine directory':
     ensure    => directory,
     path      => "${redmine_dir_path}/${redmine_directory}",
-    owner     => "${redmine_user}",
+    owner     => "${apache_user}",
     group     => "${redmine_group}",
     recurse   => true,
+  }
+
+  file { 'Changing mode on db schema':
+    ensure    => file,
+    path      => "${redmine_dir_path}/${redmine_directory}/db/schema.rb",
+    owner     => "${apache_user}",
+    group     => "${redmine_group}",
+    mode      => '0664',
+  }
+
+  file { 'Changing mode on production log file':
+    ensure    => file,
+    path      => "${redmine_dir_path}/${redmine_directory}/log/production.log",
+    owner     => "${apache_user}",
+    group     => "${redmine_group}",
+    mode      => '0664',
   }
 }

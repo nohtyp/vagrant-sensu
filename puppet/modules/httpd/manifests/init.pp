@@ -1,6 +1,6 @@
-# == Class: postgresql
+# == Class: httpd
 #
-# Full description of class postgresql here.
+# Full description of class httpd here.
 #
 # === Parameters
 #
@@ -23,7 +23,7 @@
 #
 # === Examples
 #
-#  class { postgresql:
+#  class { httpd:
 #    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
 #  }
 #
@@ -35,16 +35,15 @@
 #
 # Copyright 2016 Your name here, unless otherwise noted.
 #
-class postgresql (
-
+class httpd (
 
 ) inherits params {
 
-anchor {'postgresql::begin': } 
-  class {'::postgresql::install':} ->
-  class {'::postgresql::initialize':} ->
-  class {'::postgresql::service':} ->
-  class {'::postgresql::users':} ->
-  class {'::postgresql::database':} 
-anchor {'postgresql::end':}
+anchor {'httpd::begin': } 
+  class {'::httpd::install':} ->
+  class {'::httpd::httpconf':} ->
+  class {'::httpd::http_gems':} ->
+  class {'::httpd::passenger':} ->
+  class {'::httpd::service':}
+anchor {'httpd::end':}
 }

@@ -3,6 +3,7 @@ class redmine::users inherits params {
   group { 'redmine':
     ensure => 'present',
     gid    => '1002',
+    members => [ 'apache' ],
   }
 
   user { 'redmine':
