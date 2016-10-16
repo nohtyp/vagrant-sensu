@@ -1,7 +1,7 @@
-LoadModule passenger_module /usr/local/share/gems/gems/passenger-5.0.30/buildout/apache2/mod_passenger.so
+##LoadModule passenger_module /usr/local/share/gems/gems/passenger-5.0.30/buildout/apache2/mod_passenger.so
 #   <IfModule mod_passenger.c>
-PassengerRoot /usr/local/share/gems/gems/passenger-5.0.30
-PassengerDefaultRuby /usr/bin/ruby
+##PassengerRoot /usr/local/share/gems/gems/passenger-5.0.30
+##PassengerDefaultRuby /usr/bin/ruby
 #   </IfModule>
 
 
@@ -11,6 +11,8 @@ PassengerDefaultRuby /usr/bin/ruby
 # your Apache configuration file and set its DocumentRoot to /somewhere/public:
 #
     <VirtualHost *:80>
-       ServerName test.familyguy.local
-       DocumentRoot /opt/redmine/public
+       #ServerName test.familyguy.local
+       ServerName <%= @webserver_name %>
+       #DocumentRoot /opt/redmine/public
+       DocumentRoot <%= @redmine_dir_path %>/<%= @redmine_directory %>/<%= @public_directory %>
     </VirtualHost>

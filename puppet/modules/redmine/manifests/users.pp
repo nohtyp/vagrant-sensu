@@ -16,5 +16,6 @@ class redmine::users inherits params {
     shell            => '/bin/bash',
     uid              => '1001',
     managehome       => true,
+    require          => Group['redmine'],
    }
 }
