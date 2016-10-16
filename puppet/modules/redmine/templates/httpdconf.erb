@@ -166,10 +166,9 @@ DocumentRoot "<%= @redmine_dir_path %>/<%= @redmine_directory %>"
     DirectoryIndex index.html
 </IfModule>
 
-#LoadModule passenger_module /usr/local/share/gems/gems/passenger-5.0.30/buildout/apache2/mod_passenger.so
+#Example: LoadModule passenger_module /usr/local/share/gems/gems/passenger-5.0.30/buildout/apache2/mod_passenger.so
 LoadModule passenger_module /usr/local/share/gems/gems/<%= @passenger_version %>/buildout/apache2/mod_passenger.so
    <IfModule mod_passenger.c>
-     #PassengerRoot /usr/local/share/gems/gems/passenger-5.0.30
      PassengerRoot /usr/local/share/gems/gems/<%= @passenger_version %>
      PassengerDefaultRuby /usr/bin/ruby
    </IfModule>

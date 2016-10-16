@@ -4,8 +4,6 @@
 # your Apache configuration file and set its DocumentRoot to /somewhere/public:
 #
     <VirtualHost *:80>
-       #ServerName test.familyguy.local
        ServerName <%= @webserver_name %>
-       #DocumentRoot /opt/redmine/public
        DocumentRoot <%= @redmine_dir_path %>/<%= @redmine_directory %>/<%= @public_directory %>
     </VirtualHost>
