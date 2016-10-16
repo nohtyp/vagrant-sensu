@@ -1,4 +1,9 @@
 ---
+
+myfirewall::myports:
+    - 80
+
+
 sudo::configs:
     'redmine':
         'content'   : '%redmine ALL=(ALL) NOPASSWD: /bin/yum *, /bin/gem *, /usr/local/bin/bundler *' 

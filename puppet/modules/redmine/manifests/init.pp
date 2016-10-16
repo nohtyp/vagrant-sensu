@@ -66,12 +66,11 @@ anchor {'redmin::begin': }
   class {'::redmine::bundler':} ->
   class {'::redmine::redmine_token':} ->
   class {'::redmine::redmine_migrate':} ->
-  class {'::redmine::redmine_link':} ->
-  class {'::redmine::openssl::create_certificate':} ->
+  #class {'::redmine::openssl::create_certificate':} ->
   class {'::redmine::web::httpconf':} ->
   class {'::redmine::web::passenger':} ->
   class {'::redmine::web::passengersvc':} ->
   class {'::redmine::web::service':} ->
-  class {'::redmine::temp':}
+  class {'::redmine::selinux':}
 anchor {'redmine::end':}
 }
