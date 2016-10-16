@@ -6,6 +6,7 @@ class redmine::redmine_token inherits params {
     cwd           => "${redmine_dir_path}/${redmine_directory}",
     user          => "${redmine_user}",
     environment   => 'HOME=/home/redmine',
+    unless        => [ "test -f ${redmine_dir_path}/${redmine_directory}/config/initializers/secret_token.rb" ],
   }
 }
 
