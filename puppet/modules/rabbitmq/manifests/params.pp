@@ -78,7 +78,7 @@ class rabbitmq::params {
   $service_manage             = true
   #config
   $cluster_node_type          = 'disc'
-  $cluster_nodes              = ['sensu01', 'sensu02']
+  $cluster_nodes              = ['rabbitmq01', 'rabbitmq02']
   $config                     = 'rabbitmq/rabbitmq.config.erb'
   $config_cluster             = true
   $config_path                = '/etc/rabbitmq/rabbitmq.config'

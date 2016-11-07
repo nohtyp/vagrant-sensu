@@ -49,10 +49,15 @@ $redmine_password      = $redmine::params::redmine_password,
 $redmine_directory     = $redmine::params::redmine_directory,
 $redmine_dir_path      = $redmine::params::redmine_dir_path,
 $redmine_encoding      = $redmine::params::redmine_encoding,
+$redmine_groupid       = $redmine::params::redmine_groupid,
+$redmine_userid        = $redmine::params::redmine_userid,
+$redmine_userhome      = $redmine::params::redmine_userhome,
+$redmine_userenvhome   = $redmine::params::redmine_userenvhome,
+$redmine_usershell     = $redmine::params::redmine_usershell,
 
 ) inherits params {
 
-anchor {'redmin::begin': } 
+anchor {'redmine::begin': } 
   class {'::redmine::install':} ->
   class {'::redmine::database::initialize':} ->
   class {'::redmine::database::service':} ->

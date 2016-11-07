@@ -5,6 +5,6 @@ class redmine::redmine_migrate inherits params {
     command       => 'bundle exec rake db:migrate RAILS_ENV=production',
     cwd           => "${redmine_dir_path}/${redmine_directory}",
     user          => "${redmine_user}",
-    environment   => 'HOME=/home/redmine',
+    environment   => 'HOME=${redmine_userenvhome}',
   }
 }

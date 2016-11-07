@@ -3,10 +3,15 @@ class redmine::params {
 $redmine_packages           = ['wget', 'gcc', 'kernel-devel', 'ruby-devel', 'ImageMagick-devel', 'httpd', 'gcc-c++', 'libcurl-devel', 'httpd-devel','postgresql-server', 'postgresql-devel', 'rubygem-rack', 'zlib-devel', 'apr-devel', 'apr-util-devel']
 $redmine_user               = 'redmine'
 $redmine_group              = 'redmine'
+$redmine_groupid            = '445'
+$redmine_userid             = '445'
+$redmine_userhome           = '/home/redmine'
+$redmine_userenvhome        = 'HOME=/home/redmine'
+$redmine_usershell          = '/sbin/nologin'
 $apache_user                = 'apache'
 $apache_group               = 'apache'
 $redmine_gems               = ['bundler', 'passenger'] 
-$redmine_version            = '3.3.0'
+$redmine_version            = '3.3.1'
 $redmine_url                = 'http://www.redmine.org/releases'
 $redmine_wget_pkg           = "redmine-${redmine_version}.tar.gz"
 $redmine_adapter            = 'postgresql'
