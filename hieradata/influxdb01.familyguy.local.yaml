@@ -1,0 +1,16 @@
+---
+
+hosts::host_entries:
+  'influxdb01.familyguy.local':
+    ip: '192.168.2.200'
+    host_aliases:
+      - 'influxdb01'
+  'influxdb02.familyguy.local':
+    ip: '192.168.2.201'
+    host_aliases:
+      - 'influxdb02'
+  'influxdb03.familyguy.local':
+    ip: '192.168.2.202'
+    host_aliases:
+      - 'influxdb03'
+
