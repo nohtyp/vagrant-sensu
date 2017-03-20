@@ -29,14 +29,18 @@ Puppet::Type.type(:influxuser).provide(:timeseriesuser) do
   def exists?
     json = influx('-host', @resource[:host], '-execute', 'show users', '-username', @resource[:username], '-password', @resource[:password], '-format', 'json')
     user = JSON.parse(json)
-    user["results"][0]["series"][0]["values"].each do |user|
-      if user.include?("#{@resource[:createuser]}")
-        return true
-      else
-        puts "#{user}"
-        next
+    begin
+      user["results"][0]["series"][0]["values"].each do |user|
+        if user.include?("#{@resource[:createuser]}")
+          return true
+        else
+          puts "#{user}"
+          next
+        end
       end
+        return false
+    rescue
+      return false
     end
-    return false
   end
 end

@@ -11,37 +11,6 @@ Puppet::Type.type(:influxdb).provide(:timeseriesdb) do
 
   commands :influx => 'influx'
 
-  def build_parameters
-    params = [] 
-
-    if "#{@resource[:ensure]}" == 'present' 
-        if @resource[:username].nil? && @resource[:password].nil? && @resource[:host].nil?
-            fail("You have to provide a username, password and host")
-        else
-          params <<  "-username '#{@resource[:username]}' -password '#{@resource[:password]}' -host '#{@resource[:host]}' -port '#{@resource[:port]}'"
-        end
-    
-        if @resource[:database].nil?
-          fail("You have to provide database in your manifest")
-        else
-          params << "-execute 'create database #{@resource[:database]}'" 
-        end
-    end
-
-    if "#{@resource[:ensure]}" == 'absent' 
-        if@resource[:username].nil? && @resource[:password].nil? && @resource[:host].nil?
-          fail("You have to provide a username, password and host")
-        else
-          params <<  "-username '#{@resource[:username]}' -password '#{@resource[:password]}' -host '#{@resource[:host]}' -port '#{@resource[:port]}'"
-        end
-    end
-    
-    params.each do |key|
-      Puppet.debug("#{key}")
-    end
-   params
-  end
-
   def create
       Puppet.debug("Creating database #{@resource[:database]} on host #{@resource[:host]}")
       influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "create database #{@resource[:database]}")

@@ -15,7 +15,7 @@ influxuser { 'Creating user':
    userpwd  => 'new.one',
    host       => '192.168.2.199',
    port      => '8086',
-   username  => 'foster',
+   #username  => 'foster',
    password  => 'new.one',
  }
 
