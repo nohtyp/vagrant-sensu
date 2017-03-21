@@ -29,7 +29,7 @@ influxuser { 'Creating user':
  }
 
 influxperm { 'Modifying user':
-   ensure     => present,
+   ensure     => absent,
    user       => 'loser',
    perms      => 'read',
    host       => '192.168.2.199',

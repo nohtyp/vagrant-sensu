@@ -18,7 +18,7 @@ Puppet::Type.type(:influxperm).provide(:timeseriesperms) do
 
   def destroy
     Puppet.debug("Revoking #{@resource[:perms]} permissions for #{@resource[:user]} from database #{@resource[:database]} on host #{@resource[:host]}")
-        influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "revoke #{@resource[:perms]} on #{@resource[:database]} to #{@resource[:user]}")
+        influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "revoke #{@resource[:perms]} on #{@resource[:database]} from #{@resource[:user]}")
   end
 
   def exists?
