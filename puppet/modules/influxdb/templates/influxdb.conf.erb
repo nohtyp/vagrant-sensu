@@ -4,7 +4,8 @@
 # The data includes a random ID, os, arch, version, the number of series and other
 # usage data. No data from user databases is ever transmitted.
 # Change this option to true to disable reporting.
-reporting-disabled = false
+#reporting-disabled = false
+reporting-disabled = <%= @reporting_disabled %>
 
 # we'll try to get the hostname automatically, but if it the os returns something
 # that isn't resolvable by other servers in the cluster, use this option to
@@ -23,10 +24,12 @@ hostname = "<%= @hostname %>"
   # Where the metadata/raft database is stored
   dir = "/var/lib/influxdb/meta"
 
-  retention-autocreate = true
+  #retention-autocreate = true
+  retention-autocreate = <%= @retention_autocreate %>
 
   # If log messages are printed for the meta service
-  logging-enabled = true
+  #logging-enabled = true
+  logging-enabled = <%= @logging_enabled %>
   pprof-enabled = false
 
   # The default duration for leases.
@@ -43,7 +46,8 @@ hostname = "<%= @hostname %>"
 
 [data]
   # Controls if this node holds time series data shards in the cluster
-  enabled = true
+  #enabled = true
+  enabled = <%= @data_shards_in_cluster %>
 
   dir = "/var/lib/influxdb/data"
 
@@ -150,10 +154,11 @@ hostname = "<%= @hostname %>"
 [admin]
   enabled = true
   #bind-address = ":8083"
-  bind-address = "<%= @ipaddress_enp0s8 %>:<%= @admin_bind_port %>"
+  bind-address = "<%= @bind_ipaddress %>:<%= @admin_bind_port %>"
   #https-enabled = false
   https-enabled = <%= @influxdb_https_enable %>
-  https-certificate = "/etc/ssl/influxdb.pem"
+  #https-certificate = "/etc/ssl/influxdb.pem"
+  https-certificate = "<%= @influxdb_admin_cert %>"
 
 ###
 ### [http]
@@ -165,13 +170,19 @@ hostname = "<%= @hostname %>"
 [http]
   enabled = true
   #bind-address = ":8086"
-  bind-address = "<%= @ipaddress_enp0s8 %>:<%= @http_bind_port %>"
-  auth-enabled = false
-  log-enabled = true
-  write-tracing = false
-  pprof-enabled = false
-  https-enabled = false
-  https-certificate = "/etc/ssl/influxdb.pem"
+  bind-address = "<%= @bind_ipaddress %>:<%= @http_bind_port %>"
+  #auth-enabled = false
+  auth-enabled = <%= @http_auth_enabled %>
+  #log-enabled = true
+  log-enabled = <%= @http_log_enabled %>
+  #write-tracing = false
+  write-tracing = <%= @http_write_tracing %>
+  #pprof-enabled = false
+  pprof-enabled = <%= @http_pprof_enabled %>
+  #https-enabled = false
+  https-enabled = <%= @http_https_enabled %>
+  #https-certificate = "/etc/ssl/influxdb.pem"
+  https-certificate = "<%= @http_certificate %>"
   ### Use a separate private key location.
   # https-private-key = ""
   max-row-limit = 10000
@@ -185,7 +196,8 @@ hostname = "<%= @hostname %>"
 ###
 
 [subscriber]
-  enabled = true
+  #enabled = true
+  enabled = <%= @subscriber_enabled %>
   # http-timeout = "30s"
   # write-concurrency = 40
   # write-buffer-size = 1000
@@ -198,7 +210,8 @@ hostname = "<%= @hostname %>"
 ###
 
 [[graphite]]
-  enabled = false
+  #enabled = false
+  enabled = <%= @graphite_enabled %>
   # database = "graphite"
   # bind-address = ":2003"
   # protocol = "tcp"
@@ -237,7 +250,8 @@ hostname = "<%= @hostname %>"
 ###
 
 [[collectd]]
-  enabled = true
+  #enabled = true
+  enabled = <%= @collectd_enabled %>
   #$bind-address = "0.0.0.0:8888"
   bind-address = "<%= @collectd_bind_port %>"
    database = "metrics"
@@ -259,7 +273,8 @@ hostname = "<%= @hostname %>"
 ###
 
 [[opentsdb]]
-  enabled = false
+  #enabled = false
+  enabled = <%= @opentsdb_enabled %>
   # bind-address = ":4242"
   # database = "opentsdb"
   # retention-policy = ""
@@ -283,7 +298,8 @@ hostname = "<%= @hostname %>"
 ###
 
 [[udp]]
-  enabled = false
+  #enabled = false
+  enabled = <%= @udp_enabled %>
   # bind-address = ""
   # database = "udp"
   # retention-policy = ""
@@ -307,6 +323,8 @@ hostname = "<%= @hostname %>"
 ###
 
 [continuous_queries]
-  log-enabled = true
-  enabled = true
+  #log-enabled = true
+  log-enabled = <%= @continuous_queries_log_enabled %>
+  #enabled = true
+  enabled = <%= @continuous_queries_enabled %>
   # run-interval = "1s" # interval for how often continuous queries will be checked if they need to run

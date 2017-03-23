@@ -1,7 +1,7 @@
 class influxdb::database inherits influxdb {
 
  influxdb { 'Creating database':
-    ensure  => present,
+    ensure    => present,
     username  => 'foster',
     password  => 'new.one',
     database  => 'chunkycheese',
@@ -10,7 +10,7 @@ class influxdb::database inherits influxdb {
   }
 
  influxdb { 'Creating database2':
-    ensure  => present,
+    ensure    => present,
     username  => 'foster',
     password  => 'new.one',
     database  => 'mamba',
@@ -21,17 +21,17 @@ class influxdb::database inherits influxdb {
 influxuser { 'Creating user':
    ensure  => present,
    createuser => 'loser',
-   userpwd  => 'new.one',
+   userpwd    => 'new.one',
    host       => '192.168.2.199',
-   port      => '8086',
-   username  => 'foster',
-   password  => 'new.one',
+   port       => '8086',
+   username   => 'foster',
+   password   => 'new.one',
  }
 
 influxperm { 'Modifying user':
-   ensure     => absent,
+   ensure     => present,
    user       => 'loser',
-   perms      => 'read',
+   perms      => 'write',
    host       => '192.168.2.199',
    port       => '8086',
    username   => 'foster',

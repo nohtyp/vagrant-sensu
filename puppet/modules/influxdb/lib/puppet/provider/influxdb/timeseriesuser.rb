@@ -34,7 +34,7 @@ Puppet::Type.type(:influxuser).provide(:timeseriesuser) do
         if user.include?("#{@resource[:createuser]}")
           return true
         else
-          puts "#{user}"
+          #puts "#{user}"
           next
         end
       end
