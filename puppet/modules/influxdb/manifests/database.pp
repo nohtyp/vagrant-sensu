@@ -38,4 +38,19 @@ influxperm { 'Modifying user':
    password   => 'new.one',
    database   => 'mamba',
   }
+
+influx_retention { 'Retention Policy':
+   ensure           => present,
+   policyname       => 'test1',
+   host             => '192.168.2.199',
+   port             => '8086',
+   username         => 'foster',
+   password         => 'new.one',
+   database         => 'chunkycheese',
+   duration        => '24h0m22s',
+   #duration        => '1d',
+   shard_duration   => '1h0m3s',
+   replication      => '2',
+   default_policy   => true,
+  }
 }
