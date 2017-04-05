@@ -50,23 +50,23 @@ Puppet::Type.newtype(:influx_retention) do
   end
 
   newparam(:database) do
-    desc 'database to configure'
+    desc 'database to configure (Required)'
   end
   
   newparam(:policyname) do
-    desc 'set influxdb retention policy'
+    desc 'set influxdb retention policy (Required)'
   end
 
   newparam(:replication) do
-    desc 'set influxdb replication'
+    desc 'set influxdb replication (Required)'
   end
 
   newparam(:duration) do
-    desc 'set influxdb duration'
+    desc 'set influxdb duration (Required)'
   end
 
   newparam(:shard_duration) do
-    desc 'set influxdb shard duration'
+    desc 'set influxdb shard duration (Required)'
   end
 
   newparam(:default_policy, :parent => Puppet::Property::Boolean) do

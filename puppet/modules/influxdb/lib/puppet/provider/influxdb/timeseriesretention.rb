@@ -13,7 +13,7 @@ Puppet::Type.type(:influx_retention).provide(:timeseriesretention) do
 
   def create_policy
     if @resource[:default_policy] && "#{@resource[:default_policy]}" == true  
-      if @resouce[:shard_duration]  && !@resource[:shard_duration].nil?
+      if @resource[:shard_duration]  && !@resource[:shard_duration].nil?
       Puppet.debug("Creating default retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
         influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "create retention policy #{@resource[:policyname]} on #{@resource[:database]} duration #{@resource[:duration]} replication #{@resource[:replication]} shard duration #{@resource[:shard_duration]} default")
       else
@@ -24,25 +24,26 @@ Puppet::Type.type(:influx_retention).provide(:timeseriesretention) do
       Puppet.debug("Creating retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
       influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "create retention policy #{@resource[:policyname]} on #{@resource[:database]} duration #{@resource[:duration]} replication #{@resource[:replication]} shard duration #{@resource[:shard_duration]}")
     else
-      Puppet.debug("Creating retention policy #{@resouce[:policyname]} for database #{@resource[:database]}")
+      Puppet.debug("Creating retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
       influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "create retention policy #{@resource[:policyname]} on #{@resource[:database]} duration #{@resource[:duration]} replication #{@resource[:replication]}")
     end
   end
 
   def alter_policy
-    if @resource[:default_policy] && "#{@resource[:default_policy]}" == true
-      if @resouce[:shard_duration]  && !@resource[:shard_duration].nil?
-      Puppet.debug("Creating default retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
+    if @resource[:default_policy] && @resource[:default_policy] == true
+    #if @resource[:default_policy] == true
+      if @resource[:shard_duration]  && !@resource[:shard_duration].nil?
+      Puppet.debug("Altering default retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
         influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "alter retention policy #{@resource[:policyname]} on #{@resource[:database]} duration #{@resource[:duration]} replication #{@resource[:replication]} shard duration #{@resource[:shard_duration]} default")
       else
-        Puppet.debug("Creating default retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
+        Puppet.debug("Altering default retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
         influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "alter retention policy #{@resource[:policyname]} on #{@resource[:database]} duration #{@resource[:duration]} replication #{@resource[:replication]} default")
       end
     elsif @resource[:shard_duration]  && !@resource[:shard_duration].nil?
-      Puppet.debug("Creating retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
+      Puppet.debug("Altering retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
       influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "alter retention policy #{@resource[:policyname]} on #{@resource[:database]} duration #{@resource[:duration]} replication #{@resource[:replication]} shard duration #{@resource[:shard_duration]}")
     else
-      Puppet.debug("Creating retention policy #{@resouce[:policyname]} for database #{@resource[:database]}")
+      Puppet.debug("Altering retention policy #{@resource[:policyname]} for database #{@resource[:database]}")
       influx('-host', @resource[:host], '-port', @resource[:port], '-execute', "alter retention policy #{@resource[:policyname]} on #{@resource[:database]} duration #{@resource[:duration]} replication #{@resource[:replication]}")
     end
   end
@@ -66,6 +67,7 @@ Puppet::Type.type(:influx_retention).provide(:timeseriesretention) do
       rp["results"][0]["series"][0]["values"].each do |p|
         if p.include?("#{@resource[:policyname]}")
           @test = 0
+          @mvalues = 0
           p.each do |u|
             if @resource[:duration] && "#{u}" == "#{@resource[:duration]}"
                 @test += 1
@@ -73,9 +75,11 @@ Puppet::Type.type(:influx_retention).provide(:timeseriesretention) do
                 @test += 1
             elsif @resource[:replication] && "#{u}" == "#{@resource[:replication]}"
                 @test += 1
-            elsif @resource[:default_policy] && "#{u}" == "#{@resource[:default_policy]}"
+            elsif "#{@resource[:default_policy]}" && "#{u.class}" == "#{@resource[:default_policy].class}"
                 @test += 1
             else
+              @mvalues +=1
+              #puts "#{u}"
               next
             end
           end
@@ -83,12 +87,15 @@ Puppet::Type.type(:influx_retention).provide(:timeseriesretention) do
           next
         end
       end
-      if @test == 4
-        return true
+      if @mvalues - 1 > 0
+        #puts "myvalues"
+        return  false
       elsif @test.nil?
+        #puts "nil"
         return false
       else
-        return false
+        #puts "else"
+        return true
       end
   end
 end

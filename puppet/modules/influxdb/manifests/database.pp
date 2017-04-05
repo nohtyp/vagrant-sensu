@@ -41,16 +41,15 @@ influxperm { 'Modifying user':
 
 influx_retention { 'Retention Policy':
    ensure           => present,
-   policyname       => 'test1',
+   policyname       => 'test2',
    host             => '192.168.2.199',
    port             => '8086',
    username         => 'foster',
    password         => 'new.one',
    database         => 'chunkycheese',
-   duration        => '24h0m22s',
-   #duration        => '1d',
+   duration        => '24h0m21s',
    shard_duration   => '1h0m3s',
-   replication      => '2',
+   replication      => '1',
    default_policy   => true,
   }
 }
